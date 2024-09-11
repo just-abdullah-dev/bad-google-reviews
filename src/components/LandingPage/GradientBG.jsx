@@ -3,7 +3,7 @@ import React from "react";
 export default function GradientBG({ className }) {
   return (
     <svg
-    className={className}
+      className={className}
       width="1521"
       height="652"
       viewBox="0 0 1521 652"
@@ -42,9 +42,9 @@ export default function GradientBG({ className }) {
           width="892.3"
           height="857.508"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
@@ -63,9 +63,9 @@ export default function GradientBG({ className }) {
           width="785.8"
           height="795.901"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
@@ -84,9 +84,9 @@ export default function GradientBG({ className }) {
           width="785.8"
           height="795.901"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
@@ -105,9 +105,9 @@ export default function GradientBG({ className }) {
           width="785.8"
           height="795.901"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
