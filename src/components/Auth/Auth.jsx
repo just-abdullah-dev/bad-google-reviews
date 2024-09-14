@@ -1,6 +1,5 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,8 +12,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { X } from "lucide-react";
+import testUser from "@/constants/user";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "@/store/userSlice";
 
 export default function Auth({ closeModal }) {
+  const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
@@ -50,8 +54,17 @@ export default function Auth({ closeModal }) {
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length === 0) {
       // Proceed with form submission
-      setErrors({})
-      console.log("Form submitted", formData);
+      if (
+        testUser.email === formData.email &&
+        testUser.password === formData.password
+      ) {
+        setErrors({});
+        dispatch(setUser({ ...testUser, password: null }));
+        toast.success("Successfully logged in.");
+        window.location.reload();
+      } else {
+        toast.error("Email or password is incorrect!");
+      }
     } else {
       setErrors(validationErrors);
     }
@@ -59,7 +72,7 @@ export default function Auth({ closeModal }) {
 
   return (
     <div className="flex justify-center items-center h-fit relative rounded-xl px-4 bg-gray-100 z-[3]">
-      <Card className="w-[390px]">
+      <Card className="w-fit md:w-[390px]">
         <div
           className="absolute top-3 right-3 cursor-pointer"
           onClick={closeModal}
@@ -67,15 +80,15 @@ export default function Auth({ closeModal }) {
           <X />
         </div>
         <CardHeader>
-          <CardTitle className="text-4xl text-center font-semibold">
+          <CardTitle className="text-3xl md:text-4xl text-center font-semibold">
             {isLogin ? "Login" : "Sign Up"}
           </CardTitle>
-          <CardDescription className="text-center">
+          <CardDescription className="text-center  text-sm md:text-base">
             {isLogin ? "Enter your credentials" : "Create a new account"}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className=" text-sm md:text-base">
             {!isLogin && (
               <div className="grid w-full items-center gap-4 mb-4">
                 <Label htmlFor="name">Name</Label>
