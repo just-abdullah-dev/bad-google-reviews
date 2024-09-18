@@ -48,7 +48,7 @@ export default function Header() {
 
         {/* Right Side Avatar and Balance */}
         <div className="hidden md:flex items-center space-x-4 relative">
-          <span className="font-semibold">€ {user.balance}</span>
+          <span className="font-semibold">€ {Number(user.balance).toFixed(2)}</span>
           <div className="flex items-center gap-2 cursor-pointer group">
             <User2
               strokeWidth={1.5}
@@ -90,15 +90,33 @@ export default function Header() {
         }`}
       >
         <div className="flex justify-end items-center space-x-4 text-lg">
-          <span className="font-semibold">€ 123.45</span>
-          <User2
-            strokeWidth={1.5}
-            className="w-8 h-8 border-[2px] rounded-full border-black"
-          />
+          
+        <span className="font-semibold">€ {Number(user.balance).toFixed(2)}</span>
+        <div className="flex items-center gap-2 cursor-pointer group">
+            <User2
+              strokeWidth={1.5}
+              className="w-8 h-8 border-[2px] rounded-full border-black"
+            />
+            <ChevronDown />
+            <div className=" group-hover:opacity-100 opacity-0 duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] right-0">
+              <p className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer">
+                Profile
+              </p>
+              <p
+                onClick={() => {
+                  dispatch(clearUser());
+                  window.location.reload();
+                }}
+                className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer text-red-600"
+              >
+                Logout
+              </p>
+            </div>
+          </div>
         </div>
         <nav className=" p-4 space-y-4 flex flex-col text-3xl ">
           <Link
-            href="/home"
+            href="/"
             className="hover:scale-[1.1] duration-500 transition-all"
           >
             Home

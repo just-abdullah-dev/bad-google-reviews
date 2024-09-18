@@ -1,7 +1,8 @@
 import React from "react";
-import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
 import GradientBG from "../Pages/LandingPage/GradientBG";
+import dynamic from "next/dynamic";
+const Header = dynamic(() => import('./Header/Header'), { ssr: false });
 
 export default function Layout({ children }) {
   return (

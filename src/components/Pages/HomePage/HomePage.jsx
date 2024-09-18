@@ -5,7 +5,7 @@ import OrderForm from "./OrderForm";
 export default function HomePage() {
   return (
     <Layout>
-      <div className="grid place-items-center gap-4 md:gap-16 py-4 px-8 h-[calc(100vh-64px)]">
+      <div className="grid place-items-center gap-4 md:gap-16 py-4 px-8 min-h-[calc(100vh-64px)]">
         <h1 className=" text-[40px] sm:text-6xl md:text-8xl font-[600] tracking-tighter leading-tight text-center">
           Few <span className="text-[#4286f5]">S</span>
           <span className="text-[#dc4437]">i</span>
