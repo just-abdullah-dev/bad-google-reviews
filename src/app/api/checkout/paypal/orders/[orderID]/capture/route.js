@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import fetch from 'node-fetch';
 
 // Environment variables
-const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET_KEY } = process.env;
+const PAYPAL_CLIENT_ID = `${process.env.PAYPAL_CLIENT_ID}`;
+const PAYPAL_CLIENT_SECRET_KEY = `${process.env.PAYPAL_CLIENT_SECRET_KEY}`;
 const base = 'https://api-m.sandbox.paypal.com';
 
 // Helper function to generate PayPal access token

@@ -15,7 +15,7 @@ export default function PayPal({ goBack, amount }) {
 
     const [paymentMessage, setPaymentMessage] = useState(null);
   const initialOptions = {
-    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+    clientId: `${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}`,
     // "enable-funding": "venmo",
     // "disable-funding": "",
     // country: "US",
