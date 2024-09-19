@@ -4,14 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { ArrowLeftCircle } from "lucide-react";
 import ConfirmOrder from "./ConfirmOrder";
+import { setUser } from "@/store/userSlice";
 
 export default function OrderForm() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [confirmOrder, setConfirmOrder] = useState(false);
   const [formData, setFormData] = useState({
@@ -22,6 +24,9 @@ export default function OrderForm() {
   });
   const [errors, setErrors] = useState({});
   const [step, setStep] = useState(1); // Step control
+
+  const totalAmount =
+    formData.noOfReviews * process.env.NEXT_PUBLIC_PRICE_PER_REVIEW;
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -54,11 +59,18 @@ export default function OrderForm() {
         return;
       }
       setErrors({});
-      const totalAmount =
-        formData.noOfReviews * process.env.NEXT_PUBLIC_PRICE_PER_REVIEW;
-      if (Number(user.balance) >= totalAmount) {
+      if (Number(user.balance) - Number(user.reservedAmount) >= totalAmount) {
         setConfirmOrder(true);
       } else {
+        if (user.reservedAmount > 0) {
+          alert(
+            `Your €${
+              user.reservedAmount
+            } is already reserved for previous orders. You need to top up €${
+              totalAmount - (Number(user.balance) - Number(user.reservedAmount))
+            }`
+          );
+        }
         toast("Top up first to place order.");
         router.push("/topup");
       }
@@ -85,13 +97,19 @@ export default function OrderForm() {
         setConfirmOrder(false);
       }}
       onConfirm={() => {
+        dispatch(
+          setUser({
+            ...user,
+            reservedAmount: Number(user.reservedAmount) + Number(totalAmount),
+          })
+        );
         toast.success("Your order has been placed.");
         router.push("/orders");
       }}
       data={formData}
     />
   ) : (
-    <Card className="w-full bg-transparent">
+    <Card className="w-full bg-transparent border-none shadow-none">
       <CardHeader>
         <CardTitle className="text-xl md:text-2xl text-center font-bold relative">
           <ArrowLeftCircle
@@ -100,7 +118,7 @@ export default function OrderForm() {
             }}
             className={` ${
               step === 1 ? " hidden " : " block "
-            } absolute top-1 cursor-pointer left-0`}
+            } absolute top-1 cursor-pointer left-[-24px] lg:left-0`}
           />
           Charged only after deletion
         </CardTitle>
@@ -138,10 +156,10 @@ export default function OrderForm() {
                     {errors?.reviewSelectionOpt}
                   </p>
                 )}
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-auto flex-wrap text-sm lg:text-base gap-2">
                   <Button
                     type="button"
-                    className=" border border-black"
+                    className=" border border-black min-w-fit"
                     variant={
                       formData.reviewSelectionOpt === "1"
                         ? "default"
@@ -155,7 +173,7 @@ export default function OrderForm() {
                   </Button>
                   <Button
                     type="button"
-                    className=" border border-black"
+                    className=" border border-black min-w-fit"
                     variant={
                       formData.reviewSelectionOpt === "1-2"
                         ? "default"
@@ -169,7 +187,7 @@ export default function OrderForm() {
                   </Button>
                   <Button
                     type="button"
-                    className=" border border-black"
+                    className=" border border-black min-w-fit"
                     variant={
                       formData.reviewSelectionOpt === "1-3"
                         ? "default"
@@ -183,7 +201,7 @@ export default function OrderForm() {
                   </Button>
                   <Button
                     type="button"
-                    className=" border border-black"
+                    className=" border border-black min-w-fit"
                     variant={
                       formData.reviewSelectionOpt === "specific"
                         ? "default"
@@ -203,22 +221,39 @@ export default function OrderForm() {
 
               {/* Select Number of Reviews */}
               <div className="grid w-full items-center gap-4 mb-4">
-                <Label htmlFor="noOfReviews">No Of Reviews</Label>
-                <select
-                  id="noOfReviews"
-                  className="bg-white border border-gray-300 rounded-md p-2"
-                  value={formData.noOfReviews}
-                  onChange={handleInputChange}
-                >
-                  <option value="" disabled>
-                    Select number of reviews
-                  </option>
-                  {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
-                    <option key={num} value={num}>
-                      {num}
+                {formData?.reviewSelectionOpt !== "" && (
+                  <Label htmlFor="noOfReviews">
+                    No Of Reviews{" "}
+                    <span className="text-gray-600">
+                      (€ {process.env.NEXT_PUBLIC_PRICE_PER_REVIEW} per/review)
+                    </span>
+                  </Label>
+                )}
+                {formData?.reviewSelectionOpt === "specific" ? (
+                  <select
+                    id="noOfReviews"
+                    className="bg-white border border-gray-300 rounded-md p-2"
+                    value={formData.noOfReviews}
+                    onChange={handleInputChange}
+                  >
+                    <option value="" disabled>
+                      Select number of reviews
                     </option>
-                  ))}
-                </select>
+                    {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+                      <option key={num} value={num}>
+                        {num}
+                      </option>
+                    ))}
+                  </select>
+                ) : formData?.reviewSelectionOpt !== "" ? (
+                  <Input
+                    id="noOfReviews"
+                    className="bg-white border border-gray-300 rounded-md p-2"
+                    value={formData.noOfReviews}
+                    onChange={handleInputChange}
+                    type="number"
+                  />
+                ) : null}
               </div>
               {/* Specific Review Links Textarea */}
               {formData.reviewSelectionOpt === "specific" && (

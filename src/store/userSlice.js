@@ -5,6 +5,7 @@ const initialState = {
   name: '',
   avatar: '',
   balance: 0,
+  reservedAmount: 0,
   id: '',
   email: '',
   token: '',
@@ -24,13 +25,14 @@ const userSlice = createSlice({
   initialState: firstState,
   reducers: {
     setUser: (state, action) => {
-      const { name, avatar, balance, id, email, token } = action.payload;
+      const { name, avatar, balance, id, email, token, reservedAmount } = action.payload;
       state.name = name;
       state.avatar = avatar;
       state.balance = balance;
       state.id = id;
       state.email = email;
       state.token = token;
+      state.reservedAmount = reservedAmount;
 
       // Save the user state to sessionStorage
       if (typeof window !== 'undefined') {
@@ -45,6 +47,7 @@ const userSlice = createSlice({
       state.id = initialState.id;
       state.email = initialState.email;
       state.token = initialState.token;
+      state.reservedAmount = initialState.reservedAmount;
 
       // Clear sessionStorage on logout
       if (typeof window !== 'undefined') {

@@ -5,6 +5,7 @@ import { Button } from "../../ui/button";
 import Link from "next/link";
 import Auth from "../../Auth/Auth";
 import Image from "next/image";
+import Auth2 from "@/components/Auth/Auth2";
 
 export default function LandingPage() {
   const [isInterested, setIsInterested] = useState(false);
