@@ -16,6 +16,7 @@ const AdminOrders = () => {
       orderId: "ORD001",
       dateTime: "2024-09-12 12:30 PM",
       noOfReviews: 5,
+      reviewLinks: "lorem ipsum 123 ", 
       mapLink: "https://goo.gl/maps/sample1",
       currentStatus: "inprogress",
       totalCost: 200,
@@ -25,6 +26,7 @@ const AdminOrders = () => {
       orderId: "ORD002",
       dateTime: "2024-09-13 10:00 AM",
       noOfReviews: 8,
+      reviewLinks: "lorem ipsum 123 ", 
       mapLink: "https://goo.gl/maps/sample2",
       currentStatus: "submitted to google",
       totalCost: 350,
@@ -34,6 +36,7 @@ const AdminOrders = () => {
       orderId: "ORD003",
       dateTime: "2024-09-14 3:00 PM",
       noOfReviews: 3,
+      reviewLinks: "lorem ipsum 123 ", 
       mapLink: "https://goo.gl/maps/sample3",
       currentStatus: "partially fulfilled",
       totalCost: 150,
@@ -43,6 +46,7 @@ const AdminOrders = () => {
       orderId: "ORD001",
       dateTime: "2024-09-12 12:30 PM",
       noOfReviews: 5,
+      reviewLinks: "lorem ipsum 123 ", 
       mapLink: "https://goo.gl/maps/sample1",
       currentStatus: "inprogress",
       totalCost: 200,
@@ -52,6 +56,7 @@ const AdminOrders = () => {
       orderId: "ORD002",
       dateTime: "2024-09-13 10:00 AM",
       noOfReviews: 8,
+      reviewLinks: "lorem ipsum 123 ", 
       mapLink: "https://goo.gl/maps/sample2",
       currentStatus: "submitted to google",
       totalCost: 350,
@@ -61,6 +66,7 @@ const AdminOrders = () => {
       orderId: "ORD003",
       dateTime: "2024-09-14 3:00 PM",
       noOfReviews: 3,
+      reviewLinks: "lorem ipsum 123 ", 
       mapLink: "https://goo.gl/maps/sample3",
       currentStatus: "partially fulfilled",
       totalCost: 150,
@@ -117,6 +123,9 @@ const AdminOrders = () => {
                 Google Map Link
               </th>
               <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+                Review Links
+              </th>
+              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
                 Delete Reviews
               </th>
               <th className="py-3 px-4 font-semibold text-sm text-gray-700">
@@ -154,6 +163,9 @@ const AdminOrders = () => {
                   >
                     Google Map Link
                   </a>
+                </td>
+                <td className="py-3 px-4 text-gray-800 text-sm">
+                  {order.reviewLinks}
                 </td>
                 <td className="py-3 px-4 text-gray-800 text-sm">
                   {order.noOfReviews <= 2 && (

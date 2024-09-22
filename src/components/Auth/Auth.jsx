@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
+import { account, ID } from "@/lib/app_write_client";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,14 +13,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { X } from "lucide-react";
-import testUser from "@/constants/user";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "@/store/userSlice";
+import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
 
 export default function Auth({ closeModal }) {
   const dispatch = useDispatch();
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -49,21 +51,65 @@ export default function Auth({ closeModal }) {
     return errors;
   };
 
+  const login = async () => {
+    setIsLoading(true);
+    try {
+      await account.createEmailPasswordSession(
+        formData?.email,
+        formData?.password
+      );
+      setErrors({});
+      const data = await getUserWithBalance();
+      dispatch(setUser(data));
+      toast.success("Successfully Logged in.");
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+      setErrors({
+        general: error?.message,
+      });
+    }
+    setIsLoading(false);
+  };
+
+  const register = async () => {
+    setIsLoading(true);
+    try {
+      const data = await account.create(
+        ID.unique(),
+        formData?.email,
+        formData?.password,
+        formData?.name
+      );
+      setErrors({});
+      const res = await fetch("/api/balance", {
+        method: "POST",
+        body: JSON.stringify({
+          userId: data?.$id,
+        }),
+      });
+      const balanceData = await res.json();
+      if (!balanceData?.success) {
+        toast.error(balanceData?.message);
+        return;
+      }
+      login();
+    } catch (error) {
+      setErrors({
+        general: error?.message,
+      });
+    }
+    setIsLoading(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length === 0) {
-      // Proceed with form submission
-      if (
-        testUser.email === formData.email &&
-        testUser.password === formData.password
-      ) {
-        setErrors({});
-        dispatch(setUser({ ...testUser, password: null }));
-        toast.success("Successfully logged in.");
-        window.location.reload();
+      if (isLogin) {
+        login();
       } else {
-        toast.error("Email or password is incorrect!");
+        register();
       }
     } else {
       setErrors(validationErrors);
@@ -85,6 +131,11 @@ export default function Auth({ closeModal }) {
           </CardTitle>
           <CardDescription className="text-center  text-sm md:text-base">
             {isLogin ? "Enter your credentials" : "Create a new account"}
+          </CardDescription>
+          <CardDescription className=" text-[12px] ">
+            {errors?.general && (
+              <p className=" text-red-500">{errors?.general}</p>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -130,8 +181,12 @@ export default function Auth({ closeModal }) {
                 <p className="text-red-500 text-sm">{errors.password}</p>
               )}
             </div>
-            <Button className="w-full" type="submit">
-              {isLogin ? "Login" : "Sign Up"}
+            <Button
+              disabled={isLoading}
+              className="w-full disabled:cursor-not-allowed"
+              type="submit"
+            >
+              {isLoading ? "Please wait..." : isLogin ? "Login" : "Sign Up"}
             </Button>
           </form>
         </CardContent>

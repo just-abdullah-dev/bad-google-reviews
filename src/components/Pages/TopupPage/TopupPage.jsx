@@ -6,20 +6,39 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import PayPal from "./PayPal";
 import Stripe from "./Stripe";
 import { useRouter } from "next/navigation";
+import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
+import { setUser } from "@/store/userSlice";
+import LoadingScreen from "@/components/ui/LoadingScreen";
 
 export default function TopupPage() {
   const user = useSelector((state) => state.user);
   const router = useRouter();
-  useEffect(()=>{
-    if(!user.id){
-      toast.error('Kindly login first.');
-      router.push('/')
+  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const main = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getUserWithBalance();
+        dispatch(setUser(data));
+      } catch (error) {
+        toast.error("Kindly login first!");
+        router.push("/");
+      }
+      setIsLoading(false);
+    };
+    if (!user.id) {
+      main();
+    } else {
+      setIsLoading(false);
     }
-  }, [])
+  }, []);
+
   const [formData, setFormData] = useState({
     paymentMethod: "",
     amount: 0.0,
@@ -48,7 +67,10 @@ export default function TopupPage() {
     }
   };
 
-  
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <Layout>
       <div className=" grid md:place-items-center py-4 px-8 min-h-[calc(100vh-64px)] max-h-fit w-full">

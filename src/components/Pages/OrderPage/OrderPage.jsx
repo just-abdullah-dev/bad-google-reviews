@@ -3,22 +3,44 @@ import Layout from "@/components/Layout/Layout";
 import { Input } from "@/components/ui/input";
 import React, { useEffect, useState } from "react";
 import UserOrders from "./UserOrders";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import AdminOrders from "./AdminOrders";
+import LoadingScreen from "@/components/ui/LoadingScreen";
+import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
+import { setUser } from "@/store/userSlice";
 
 export default function OrderPage() {
+  const [currentViewOrders, setCurrentViewOrders] = useState("user");
   const user = useSelector((state) => state.user);
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
+    const main = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getUserWithBalance();
+        dispatch(setUser(data));
+      } catch (error) {
+        toast.error("Kindly login first!");
+        router.push("/");
+      }
+      setIsLoading(false);
+    };
     if (!user.id) {
-      toast.error("Kindly login first.");
-      router.push("/");
+      main();
+    }else{
+      setIsLoading(false)
     }
   }, []);
-  const [currentViewOrders, setCurrentViewOrders] = useState("user");
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
   return (
     <Layout>
       <div className=" min-h-[calc(100vh-64px)] grid place-items-center">

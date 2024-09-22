@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -71,5 +70,47 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+.loading-container {
+  display: flex;
+  column-gap: 25px;
+}
+
+.loading-container .loading-dot {
+  width: 30px;
+  height: 30px;
+  background-color: black;
+  border-radius: 50%;
+  animation: loading .8s infinite alternate;
+}
+
+.loading-container .loading-dot:nth-child(1) {
+  background-color: #4285f4;
+  animation-delay: -0.20s;
+}
+
+.loading-container .loading-dot:nth-child(2) {
+  background-color: #ea4335;
+  animation-delay: -0.4s;
+}
+
+.loading-container .loading-dot:nth-child(3) {
+  background-color: #fbbc05;
+  animation-delay: -0.6s;
+}
+
+.loading-container .loading-dot:nth-child(4) {
+  background-color: #34a853;
+  animation-delay: -0.8s;
+}
+
+@keyframes loading {
+  0% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(5px);
   }
 }

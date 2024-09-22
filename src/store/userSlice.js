@@ -1,31 +1,26 @@
-'use client';
-import { createSlice } from '@reduxjs/toolkit';
+"use client";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  name: '',
-  avatar: '',
+  name: "",
+  avatar: "",
   balance: 0,
   reservedAmount: 0,
-  id: '',
-  email: '',
-  token: '',
+  id: "",
+  email: "",
+  token: "",
 };
 
 // Define the initial state dynamically to prevent SSR issues
 let firstState = initialState;
 
-if (typeof window !== 'undefined') {
-  // We are in the browser, so sessionStorage is accessible
-  const storedUser = sessionStorage.getItem('user');
-  firstState = storedUser ? JSON.parse(storedUser) : initialState;
-}
-
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState: firstState,
   reducers: {
     setUser: (state, action) => {
-      const { name, avatar, balance, id, email, token, reservedAmount } = action.payload;
+      const { name, avatar, balance, id, email, token, reservedAmount } =
+        action.payload;
       state.name = name;
       state.avatar = avatar;
       state.balance = balance;
@@ -33,11 +28,6 @@ const userSlice = createSlice({
       state.email = email;
       state.token = token;
       state.reservedAmount = reservedAmount;
-
-      // Save the user state to sessionStorage
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('user', JSON.stringify(state));
-      }
     },
     clearUser: (state) => {
       // Clear the state and reset to initial state
@@ -48,11 +38,6 @@ const userSlice = createSlice({
       state.email = initialState.email;
       state.token = initialState.token;
       state.reservedAmount = initialState.reservedAmount;
-
-      // Clear sessionStorage on logout
-      if (typeof window !== 'undefined') {
-        sessionStorage.removeItem('user');
-      }
     },
   },
 });

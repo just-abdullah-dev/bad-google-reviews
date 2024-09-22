@@ -4,12 +4,17 @@ import Link from "next/link";
 import { Menu, X, User2, ChevronDown } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "@/store/userSlice";
+import { account } from "@/lib/app_write_client";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
+  const logout = async () => {
+    dispatch(clearUser());
+    await account.deleteSession("current");
+    window.location.reload();
+  };
   return (
     <header
       className={`${
@@ -48,7 +53,9 @@ export default function Header() {
 
         {/* Right Side Avatar and Balance */}
         <div className="hidden md:flex items-center space-x-4 relative">
-          <span className="font-semibold">€ {Number(user.balance).toFixed(2)}</span>
+          <span className="font-semibold">
+            € {Number(user.balance).toFixed(2)}
+          </span>
           <div className="flex items-center gap-2 cursor-pointer group">
             <User2
               strokeWidth={1.5}
@@ -60,10 +67,7 @@ export default function Header() {
                 Profile
               </p>
               <p
-                onClick={() => {
-                  dispatch(clearUser());
-                  window.location.reload();
-                }}
+                onClick={logout}
                 className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer text-red-600"
               >
                 Logout
@@ -90,23 +94,21 @@ export default function Header() {
         }`}
       >
         <div className="flex justify-end items-center space-x-4 text-lg">
-          
-        <span className="font-semibold">€ {Number(user.balance).toFixed(2)}</span>
-        <div className="flex items-center gap-2 cursor-pointer group">
+          <span className="font-semibold">
+            € {Number(user.balance).toFixed(2)}
+          </span>
+          <div className="flex items-center gap-2 cursor-pointer group">
             <User2
               strokeWidth={1.5}
               className="w-8 h-8 border-[2px] rounded-full border-black"
             />
             <ChevronDown />
-            <div className=" group-hover:opacity-100 opacity-0 duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] right-0">
+            <div className=" group-hover:opacity-100 opacity-0 duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[55px] right-[16px]">
               <p className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer">
                 Profile
               </p>
               <p
-                onClick={() => {
-                  dispatch(clearUser());
-                  window.location.reload();
-                }}
+                onClick={logout}
                 className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer text-red-600"
               >
                 Logout
@@ -117,19 +119,19 @@ export default function Header() {
         <nav className=" p-4 space-y-4 flex flex-col text-3xl ">
           <Link
             href="/"
-            className="hover:scale-[1.1] duration-500 transition-all"
+            className="hover:translate-x-6 w-fit duration-700 transition-all"
           >
             Home
           </Link>
           <Link
             href="/topup"
-            className="hover:scale-[1.1] duration-500 transition-all"
+            className="hover:translate-x-6 w-fit duration-700 transition-all"
           >
             Topup
           </Link>
           <Link
             href="/orders"
-            className="hover:scale-[1.1] duration-500 transition-all"
+            className="hover:translate-x-6 w-fit duration-700 transition-all"
           >
             Orders
           </Link>

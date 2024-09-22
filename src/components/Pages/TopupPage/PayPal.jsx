@@ -1,3 +1,4 @@
+"use client";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { ArrowBigLeftIcon } from "lucide-react";
 import React, { useState } from "react";
@@ -5,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PaymentMessage from "./PaymentMessage";
 import { setUser } from "@/store/userSlice";
 import { useRouter } from "next/navigation";
-
+import { updateUserBalance } from "@/actions/balance/updateUserBalance";
 
 export default function PayPal({ goBack, amount }) {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ export default function PayPal({ goBack, amount }) {
   const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
 
-    const [paymentMessage, setPaymentMessage] = useState(null);
+  const [paymentMessage, setPaymentMessage] = useState(null);
   const initialOptions = {
     clientId: `${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}`,
     // "enable-funding": "venmo",
@@ -24,8 +25,7 @@ export default function PayPal({ goBack, amount }) {
     // components: "buttons",
     // "data-sdk-integration-source": "developer-studio",
   };
-  return (
-    paymentMessage === null ?
+  return paymentMessage === null ? (
     <div className=" w-full md:w-[600px] relative md:h-full grid gap-6">
       <div
         className="absolute -top-12 cursor-pointer flex items-center hover:translate-x-[-12px] duration-500 "
@@ -79,7 +79,9 @@ export default function PayPal({ goBack, amount }) {
                 }
               } catch (error) {
                 console.error(error);
-                setPaymentMessage(`Could not initiate PayPal Checkout...${error}`);
+                setPaymentMessage(
+                  `Could not initiate PayPal Checkout...${error}`
+                );
               }
             }}
             onApprove={async (data, actions) => {
@@ -91,6 +93,10 @@ export default function PayPal({ goBack, amount }) {
                     headers: {
                       "Content-Type": "application/json",
                     },
+                    body: JSON.stringify({
+                      userId: user?.id,
+                      balance: `${Number(user?.balance) + Number(amount)}`,
+                    }),
                   }
                 );
 
@@ -116,46 +122,53 @@ export default function PayPal({ goBack, amount }) {
                   // Or go to another URL:  actions.redirect('thank_you.html');
                   const transaction =
                     orderData.purchase_units[0].payments.captures[0];
+
+                  dispatch(
+                    setUser({
+                      ...user,
+                      balance: Number(user.balance) + Number(amount),
+                    })
+                  );
+
+                  await updateUserBalance(
+                    user?.id,
+                    `${Number(user.balance) + Number(amount)}`,
+                    ``
+                  );
+                  console.log("Capture result", orderData);
                   setPaymentMessage({
                     status: transaction.status,
                     id: transaction.id,
                     payerName: `${orderData?.payer?.name?.given_name} ${orderData?.payer?.name?.surname}`,
                     updatedBalance: Number(user.balance) + Number(amount),
-                    message: `Your payment was successfull.`
+                    message: `Your payment was successfull.`,
                   });
-                  dispatch(setUser({
-                    ...user,
-                    balance: Number(user.balance) + Number(amount)
-                  }))
-                  console.log(
-                    "Capture result",
-                    orderData
-                  );
                 }
               } catch (error) {
                 console.error(error);
-                
+
                 setPaymentMessage({
-                  status: 'error',
-                  message: `Sorry, your transaction could not be processed...${error}`
+                  status: "error",
+                  message: `Sorry, your transaction could not be processed...${error}`,
                 });
               }
             }}
           />
         </PayPalScriptProvider>
       </div>
-    </div>: 
-    <PaymentMessage 
-    isOpen={true}
-    onClose={()=>{
-      router.push('/');
-      goBack(); // go back to topup page
-    }}
-    paymentStatus={paymentMessage?.status} // 'COMPLETED' | 'error'
-    payerName={paymentMessage?.payerName}
-    updatedBalance={paymentMessage?.updatedBalance}
-    id={paymentMessage?.id}
-    message={paymentMessage?.message} // both success message or error message
-    /> 
+    </div>
+  ) : (
+    <PaymentMessage
+      isOpen={true}
+      onClose={() => {
+        router.push("/");
+        goBack(); // go back to topup page
+      }}
+      paymentStatus={paymentMessage?.status} // 'COMPLETED' | 'error'
+      payerName={paymentMessage?.payerName}
+      updatedBalance={paymentMessage?.updatedBalance}
+      id={paymentMessage?.id}
+      message={paymentMessage?.message} // both success message or error message
+    />
   );
 }

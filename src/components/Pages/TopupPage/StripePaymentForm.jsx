@@ -7,6 +7,7 @@ import PaymentMessage from "./PaymentMessage";
 import { setUser } from "@/store/userSlice";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { updateUserBalance } from "@/actions/balance/updateUserBalance";
 
 export default function StripePaymentForm({ goBack, amount }) {
   const dispatch = useDispatch();
@@ -39,29 +40,37 @@ export default function StripePaymentForm({ goBack, amount }) {
       );
       console.log("from confirm card payment", paymentIntent?.status);
 
-        switch (paymentIntent?.status) {
-          case "canceled":
-            setPaymentMessage({
-              status: "error",
-              message: `Sorry, your transaction could not be processed...${paymentIntent?.status}`,
-            });
-            break;
-          case "succeeded":
-            dispatch(setUser({
+      switch (paymentIntent?.status) {
+        case "canceled":
+          setPaymentMessage({
+            status: "error",
+            message: `Sorry, your transaction could not be processed...${paymentIntent?.status}`,
+          });
+          break;
+        case "succeeded":
+          dispatch(
+            setUser({
               ...user,
-              balance: Number(user.balance) + Number(amount)
-            }))
-            setPaymentMessage({
-              status: "COMPLETED",
-              id: paymentIntent.id,
-              payerName: `${user.name}`,
-              updatedBalance: Number(user.balance) + Number(amount),
-              message: `Your payment was successfull.`,
-            });
-            break;
-          default:
-            break;
-        }
+              balance: Number(user.balance) + Number(amount),
+            })
+          );
+
+          await updateUserBalance(
+            user?.id,
+            `${Number(user.balance) + Number(amount)}`,
+            ``
+          );
+          setPaymentMessage({
+            status: "COMPLETED",
+            id: paymentIntent.id,
+            payerName: `${user.name}`,
+            updatedBalance: Number(user.balance) + Number(amount),
+            message: `Your payment was successfull.`,
+          });
+          break;
+        default:
+          break;
+      }
 
       setLoading(false);
     } catch (error) {
