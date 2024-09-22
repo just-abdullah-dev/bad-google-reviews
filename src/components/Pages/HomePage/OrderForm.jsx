@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeftCircle } from "lucide-react";
 import ConfirmOrder from "./ConfirmOrder";
 import { setUser } from "@/store/userSlice";
+import { updateUserBalance } from "@/actions/balance/updateUserBalance";
 
 export default function OrderForm() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function OrderForm() {
   });
   const [errors, setErrors] = useState({});
   const [step, setStep] = useState(1); // Step control
+  const [isLoading, setIsLoading] = useState(false);
 
   const totalAmount =
     formData.noOfReviews * process.env.NEXT_PUBLIC_PRICE_PER_REVIEW;
@@ -96,14 +98,35 @@ export default function OrderForm() {
       onClose={() => {
         setConfirmOrder(false);
       }}
-      onConfirm={() => {
+      onConfirm={async () => {
+        setIsLoading(true);
+        const res = await fetch("/api/orders/user", {
+          method: "POST",
+          body: JSON.stringify({
+            userId: user?.id,
+            googleMapLink: formData?.googleMapLink,
+            noOfReviews: formData?.noOfReviews,
+            reviewSelectionOpt: formData?.reviewSelectionOpt,
+            reviewLinks: formData?.specificReviewLinks,
+            totalCost: totalAmount,
+          }),
+        });
+        const data = await res.json();
+        console.log(data);
+
         dispatch(
           setUser({
             ...user,
             reservedAmount: Number(user.reservedAmount) + Number(totalAmount),
           })
         );
+        await updateUserBalance(
+          user?.id,
+          ``,
+          `${Number(user.reservedAmount) + Number(totalAmount)}`
+        );
         toast.success("Your order has been placed.");
+        setIsLoading(false);
         router.push("/orders");
       }}
       data={formData}
@@ -278,8 +301,8 @@ export default function OrderForm() {
                 </div>
               )}
               {/* Delete Reviews Button */}
-              <Button className="w-full" onClick={handleSubmit}>
-                Delete Reviews
+              <Button disabled={isLoading} className="w-full" onClick={handleSubmit}>
+                {isLoading ? "Please wait..." : "Delete Reviews"}
               </Button>
             </>
           )}

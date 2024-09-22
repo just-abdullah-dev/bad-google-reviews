@@ -3,34 +3,25 @@ import { NextResponse } from "next/server";
 import { ID, Query } from "node-appwrite";
 
 const db_id = process.env.APPWRITE_DB_ID;
-const collection_id = process.env.APPWRITE_BALANCE_C_ID;
+const collection_id = process.env.APPWRITE_ORDERS_C_ID;
 
 export async function GET(req) {
   try {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
+    const response = await ssDatabase.listDocuments(db_id, collection_id, 
+    //   [
+    //   Query.notEqual("status", ["fulfilled", "partially"])
+    // ]
+  );
 
-    if (!userId) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User ID is required",
-        },
-        { status: 400 }
-      );
-    }
-    const response = await ssDatabase.listDocuments(db_id, collection_id, [
-      Query.equal("userId", userId),
-    ]);
     return NextResponse.json(
       {
         success: true,
-        data: response?.documents[0],
+        data: response,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error getting balance document by user id:", error);
+    console.error("Error while fetching all orders:", error);
     return NextResponse.json(
       {
         success: false,
@@ -40,10 +31,12 @@ export async function GET(req) {
     );
   }
 }
+
 export async function PUT(req) {
   try {
     const body = await req.json();
-    const { userId, balance, reservedAmount } = body;
+    const { userId, orderId, status, noOfReviews } = body;
+    //continue from here
     if (!userId) {
       return NextResponse.json(
         {
@@ -98,58 +91,3 @@ export async function PUT(req) {
   }
 }
 
-export async function POST(req) {
-  try {
-    const body = await req.json();
-    const { userId } = body;
-    if (!userId) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User ID is required",
-        },
-        { status: 400 }
-      );
-    }
-    const balanceData = await ssDatabase.listDocuments(db_id, collection_id, [
-      Query.equal("userId", userId),
-    ]);
-
-    if (balanceData?.documents[0]) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User already have registered balance data.",
-        },
-        { status: 409 } // Conflict status
-      );
-    }
-
-    const response = await ssDatabase.createDocument(
-      db_id,
-      collection_id,
-      ID.unique(),
-      {
-        userId: userId,
-        balance: 0.0,
-        reservedAmount: 0.0,
-      }
-    );
-    return NextResponse.json(
-      {
-        success: true,
-        data: response,
-      },
-      { status: 201 }
-    );
-  } catch (error) {
-    console.error("Error creating balance document:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: error.message,
-      },
-      { status: 500 }
-    );
-  }
-}
