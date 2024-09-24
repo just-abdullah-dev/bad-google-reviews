@@ -54,7 +54,7 @@ export default function Header() {
         {/* Right Side Avatar and Balance */}
         <div className="hidden md:flex items-center space-x-4 relative">
           <span className="font-semibold">
-            € {Number(user.balance).toFixed(2)}
+            {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {Number(user.balance).toFixed(2)}
           </span>
           <div className="flex items-center gap-2 cursor-pointer group">
             <User2
@@ -95,7 +95,7 @@ export default function Header() {
       >
         <div className="flex justify-end items-center space-x-4 text-lg">
           <span className="font-semibold">
-            € {Number(user.balance).toFixed(2)}
+            {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {Number(user.balance).toFixed(2)}
           </span>
           <div className="flex items-center gap-2 cursor-pointer group">
             <User2

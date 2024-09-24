@@ -97,7 +97,7 @@ export default function TopupPage() {
                 Current Balance
               </h1>
               <p className="text-center font-semibold text-3xl md:text-4xl">
-                € {Number(user.balance).toFixed(2)}
+                {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {Number(user.balance).toFixed(2)}
               </p>
             </div>
             <div className="grid gap-2">

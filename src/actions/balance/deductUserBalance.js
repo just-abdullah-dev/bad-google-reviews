@@ -1,15 +1,11 @@
-export async function updateUserBalance(
-  userId,
-  balance = "",
-  reservedAmount = ""
-) {
+export async function deductUserBalance(userId, balance = "", onlyRemoveFromReserevedAmount = "no") {
   try {
-    const res = await fetch(`/api/balance`, {
+    const res = await fetch(`/api/balance/deduct`, {
       method: "PUT",
       body: JSON.stringify({
         userId,
         balance,
-        reservedAmount,
+        onlyRemoveFromReserevedAmount,
       }),
     });
     const balanceData = await res.json();
@@ -20,7 +16,7 @@ export async function updateUserBalance(
 
     return {
       success: true,
-      message: "User balance updated successfully.",
+      message: "User balance deducted successfully.",
     };
   } catch (error) {
     throw error;

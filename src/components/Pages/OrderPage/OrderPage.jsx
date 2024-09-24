@@ -6,18 +6,15 @@ import UserOrders from "./UserOrders";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { Button } from "@/components/ui/button";
 import AdminOrders from "./AdminOrders";
 import LoadingScreen from "@/components/ui/LoadingScreen";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
 import { setUser } from "@/store/userSlice";
 
 export default function OrderPage() {
-  const [currentViewOrders, setCurrentViewOrders] = useState("user");
   const user = useSelector((state) => state.user);
   const router = useRouter();
   const dispatch = useDispatch();
-
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -34,8 +31,8 @@ export default function OrderPage() {
     };
     if (!user.id) {
       main();
-    }else{
-      setIsLoading(false)
+    } else {
+      setIsLoading(false);
     }
   }, []);
   if (isLoading) {
@@ -43,39 +40,19 @@ export default function OrderPage() {
   }
   return (
     <Layout>
-      <div className=" min-h-[calc(100vh-64px)] grid place-items-center">
-        <div className=" w-full lg:w-[95%] xl:w-[90%] 2xl:w-[85%]">
+      <div className=" min-h-[calc(100vh-64px)] flex flex-col items-center">
+        <div className=" w-full py-6 lg:w-[95%] xl:w-[90%] 2xl:w-[85%]">
           <div className=" flex flex-col md:flex-row md:items-center gap-4 justify-between px-4 md:p-0">
             <h1 className="font-semibold text-3xl md:text-4xl">
               Orders History
             </h1>
             <Input
               placeholder="Search..."
-              className="w-[300px] outline-gray-300 outline outline-1"
+              className="hidden w-[300px] outline-gray-300 outline outline-1"
               type="text"
             />
           </div>
-          <div className=" flex items-center justify-around max-w-[700px] mx-auto my-4">
-            <Button
-              variant={"default"}
-              disabled={currentViewOrders === "user"}
-              onClick={() => {
-                setCurrentViewOrders("user");
-              }}
-            >
-              User Orders
-            </Button>
-            <Button
-              variant={"default"}
-              disabled={currentViewOrders === "admin"}
-              onClick={() => {
-                setCurrentViewOrders("admin");
-              }}
-            >
-              Admin Dashboard
-            </Button>
-          </div>
-          {currentViewOrders === "user" ? <UserOrders /> : <AdminOrders />}
+          {user.isAdmin ? <AdminOrders /> : <UserOrders userId={user?.id} />}
         </div>
       </div>
     </Layout>

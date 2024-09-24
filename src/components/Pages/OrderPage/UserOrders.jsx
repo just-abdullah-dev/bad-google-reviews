@@ -1,82 +1,40 @@
+import LoadingScreen from "@/components/ui/LoadingScreen";
+import { format } from "date-fns";
 import Link from "next/link";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const UserOrders = () => {
-  // Dummy data for the table
-  const data = [
-    {
-      dateTime: "2024-09-12 12:30 PM",
-      reviews: 5,
-      mapLink: "https://goo.gl/maps/sample1",
-      status: "Pending",
-      totalCost: "200",
-    },
-    {
-      dateTime: "2024-09-13 10:00 AM",
-      reviews: 8,
-      mapLink: "https://goo.gl/maps/sample2",
-      status: "Completed",
-      totalCost: "350",
-    },
-    {
-      dateTime: "2024-09-14 3:00 PM",
-      reviews: 3,
-      mapLink: "https://goo.gl/maps/sample3",
-      status: "In Progress",
-      totalCost: "150",
-    },
-    {
-      dateTime: "2024-09-15 9:45 AM",
-      reviews: 12,
-      mapLink: "https://goo.gl/maps/sample4",
-      status: "Pending",
-      totalCost: "500",
-    },
-    {
-      dateTime: "2024-09-16 5:20 PM",
-      reviews: 7,
-      mapLink: "https://goo.gl/maps/sample5",
-      status: "Completed",
-      totalCost: "400",
-    },
-    {
-      dateTime: "2024-09-12 12:30 PM",
-      reviews: 5,
-      mapLink: "https://goo.gl/maps/sample1",
-      status: "Pending",
-      totalCost: "200",
-    },
-    {
-      dateTime: "2024-09-13 10:00 AM",
-      reviews: 8,
-      mapLink: "https://goo.gl/maps/sample2",
-      status: "Completed",
-      totalCost: "350",
-    },
-    {
-      dateTime: "2024-09-14 3:00 PM",
-      reviews: 3,
-      mapLink: "https://goo.gl/maps/sample3",
-      status: "In Progress",
-      totalCost: "150",
-    },
-    {
-      dateTime: "2024-09-15 9:45 AM",
-      reviews: 12,
-      mapLink: "https://goo.gl/maps/sample4",
-      status: "Pending",
-      totalCost: "500",
-    },
-    {
-      dateTime: "2024-09-16 5:20 PM",
-      reviews: 7,
-      mapLink: "https://goo.gl/maps/sample5",
-      status: "Completed",
-      totalCost: "400",
-    },
-    
-  ];
+const UserOrders = ({ userId }) => {
+  
+  const [userOrders, setUserOrders] = useState("loading");
+  useEffect(() => {
+    const main = async () => {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+        next: { tags: ["user_orders"] },
+      };
+      const res = await fetch(
+        `/api/orders/user?userId=${userId}`,
+        requestOptions
+      );
+      const data = await res.json();
+      setUserOrders(data);
+    };
+    main();
+  }, []);
 
+  if (userOrders === "loading") {
+    return <LoadingScreen />;
+  } else if (userOrders?.data?.total == 0) {
+    return (
+      <div className="w-full h-full grid place-items-center">
+        <p className="text-red-600">No order history found.</p>
+      </div>
+    );
+  }
+  const formatDate = (date) => {
+    return format(new Date(date), "yyyy-MM-dd hh:mm a");
+  };
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="overflow-x-auto">
@@ -101,20 +59,20 @@ const UserOrders = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((item, index) => (
+            {userOrders?.data?.documents.map((item, index) => (
               <tr
                 key={index}
-                className="border-b border-gray-300 hover:bg-gray-300 hover:bg-opacity-45 duration-300"
+                className={`${item.status === "fulfilled" ? " bg-green-200 " : item.status === "unfulfilled" ? " bg-red-200 " : "hover:bg-gray-300 hover:bg-opacity-45 "} border-b border-gray-300   duration-300 cursor-pointer`}
               >
                 <td className="py-3 px-4 text-gray-800 text-sm">
-                  {item.dateTime}
+                  {formatDate(item?.$createdAt)}
                 </td>
                 <td className="py-3 px-4 text-gray-800 text-sm">
-                  {item.reviews}
+                  {item?.noOfReviews}
                 </td>
                 <td className="py-3 px-4 text-blue-500 text-sm">
                   <Link
-                    href={item.mapLink}
+                    href={item?.googleMapLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:underline"
@@ -123,10 +81,13 @@ const UserOrders = () => {
                   </Link>
                 </td>
                 <td className="py-3 px-4 text-gray-800 text-sm">
-                  {item.status}
+                  {item?.status
+                    .split("-")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")}
                 </td>
                 <td className="py-3 px-4 text-gray-800 text-sm">
-                  € {item.totalCost}
+                  {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {item?.totalCost}
                 </td>
               </tr>
             ))}

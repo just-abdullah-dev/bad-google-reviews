@@ -7,11 +7,7 @@ const collection_id = process.env.APPWRITE_ORDERS_C_ID;
 
 export async function GET(req) {
   try {
-    const response = await ssDatabase.listDocuments(db_id, collection_id, 
-    //   [
-    //   Query.notEqual("status", ["fulfilled", "partially"])
-    // ]
-  );
+    const response = await ssDatabase.listDocuments(db_id, collection_id);
 
     return NextResponse.json(
       {
@@ -21,7 +17,7 @@ export async function GET(req) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error while fetching all orders:", error);
+    console.error("Error while fetching all users orders:", error);
     return NextResponse.json(
       {
         success: false,
@@ -35,52 +31,49 @@ export async function GET(req) {
 export async function PUT(req) {
   try {
     const body = await req.json();
-    const { userId, orderId, status, noOfReviews } = body;
-    //continue from here
-    if (!userId) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User ID is required",
-        },
-        { status: 400 }
-      );
-    }
-    const balanceData = await ssDatabase.listDocuments(db_id, collection_id, [
-      Query.equal("userId", userId),
-    ]);
-    const existedBalance = balanceData?.documents[0];
-    if (!existedBalance) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User do not have registered balance data.",
-        },
-        { status: 400 }
-      );
-    }
+    const { orderId, status, deletedNoOfReviews } = body;
 
+    const orders = await ssDatabase.listDocuments(db_id, collection_id, [
+      Query.equal("$id", orderId),
+    ]);
+    const order = orders?.documents[0];
+    if (!order) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "No order was found.",
+        },
+        { status: 404 }
+      );
+    }
+    let data = {
+      status,
+    };
+    if (status === "fulfilled" || status === "partially-fulfilled") {
+      data = {
+        ...data,
+        finalCost:
+          process.env.NEXT_PUBLIC_PRICE_PER_REVIEW *
+          Number(deletedNoOfReviews),
+        deletedNoOfReviews: Number(deletedNoOfReviews),
+      };
+    }
     const response = await ssDatabase.updateDocument(
       db_id,
       collection_id,
-      existedBalance?.$id,
-      {
-        balance: balance !== "" ? Number(balance) : existedBalance?.balance,
-        reservedAmount:
-          reservedAmount !== ""
-            ? Number(reservedAmount)
-            : existedBalance?.reservedAmount,
-      }
+      order?.$id,
+      data
     );
+    console.log(response);
     return NextResponse.json(
       {
         success: true,
-        data: response,
+        message: "Order status has been updated.",
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error updating balance document:", error);
+    console.error("Error updating order document:", error);
     return NextResponse.json(
       {
         success: false,
@@ -90,4 +83,3 @@ export async function PUT(req) {
     );
   }
 }
-

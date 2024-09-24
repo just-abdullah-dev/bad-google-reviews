@@ -57,7 +57,7 @@ const balance = Number(updatedBalance);
                Payer Name: <span className="text-black">{payerName}</span>
               </p>
               <p className="text-lg font-medium">
-                Current Balance: <span className="text-green-600">€ {balance.toFixed(2)}</span>
+                Current Balance: <span className="text-green-600">{process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {balance.toFixed(2)}</span>
               </p>
             </>
           ) : (

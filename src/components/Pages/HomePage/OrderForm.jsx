@@ -4,17 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { ArrowLeftCircle } from "lucide-react";
 import ConfirmOrder from "./ConfirmOrder";
-import { setUser } from "@/store/userSlice";
-import { updateUserBalance } from "@/actions/balance/updateUserBalance";
-
 export default function OrderForm() {
   const router = useRouter();
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [confirmOrder, setConfirmOrder] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,7 +21,6 @@ export default function OrderForm() {
   });
   const [errors, setErrors] = useState({});
   const [step, setStep] = useState(1); // Step control
-  const [isLoading, setIsLoading] = useState(false);
 
   const totalAmount =
     formData.noOfReviews * process.env.NEXT_PUBLIC_PRICE_PER_REVIEW;
@@ -66,11 +61,11 @@ export default function OrderForm() {
       } else {
         if (user.reservedAmount > 0) {
           alert(
-            `Your €${
+            `Your ${process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} ${
               user.reservedAmount
-            } is already reserved for previous orders. You need to top up €${
+            } is already reserved for previous orders. You need ${process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} ${
               totalAmount - (Number(user.balance) - Number(user.reservedAmount))
-            }`
+            } more.`
           );
         }
         toast("Top up first to place order.");
@@ -99,34 +94,7 @@ export default function OrderForm() {
         setConfirmOrder(false);
       }}
       onConfirm={async () => {
-        setIsLoading(true);
-        const res = await fetch("/api/orders/user", {
-          method: "POST",
-          body: JSON.stringify({
-            userId: user?.id,
-            googleMapLink: formData?.googleMapLink,
-            noOfReviews: formData?.noOfReviews,
-            reviewSelectionOpt: formData?.reviewSelectionOpt,
-            reviewLinks: formData?.specificReviewLinks,
-            totalCost: totalAmount,
-          }),
-        });
-        const data = await res.json();
-        console.log(data);
-
-        dispatch(
-          setUser({
-            ...user,
-            reservedAmount: Number(user.reservedAmount) + Number(totalAmount),
-          })
-        );
-        await updateUserBalance(
-          user?.id,
-          ``,
-          `${Number(user.reservedAmount) + Number(totalAmount)}`
-        );
         toast.success("Your order has been placed.");
-        setIsLoading(false);
         router.push("/orders");
       }}
       data={formData}
@@ -248,7 +216,8 @@ export default function OrderForm() {
                   <Label htmlFor="noOfReviews">
                     No Of Reviews{" "}
                     <span className="text-gray-600">
-                      (€ {process.env.NEXT_PUBLIC_PRICE_PER_REVIEW} per/review)
+                      ({process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}{" "}
+                      {process.env.NEXT_PUBLIC_PRICE_PER_REVIEW} per/review)
                     </span>
                   </Label>
                 )}
@@ -301,8 +270,8 @@ export default function OrderForm() {
                 </div>
               )}
               {/* Delete Reviews Button */}
-              <Button disabled={isLoading} className="w-full" onClick={handleSubmit}>
-                {isLoading ? "Please wait..." : "Delete Reviews"}
+              <Button className="w-full" onClick={handleSubmit}>
+                Delete Reviews
               </Button>
             </>
           )}

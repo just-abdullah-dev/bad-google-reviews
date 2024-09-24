@@ -8,7 +8,7 @@ const initialState = {
   reservedAmount: 0,
   id: "",
   email: "",
-  token: "",
+  isAdmin: false
 };
 
 // Define the initial state dynamically to prevent SSR issues
@@ -19,14 +19,14 @@ const userSlice = createSlice({
   initialState: firstState,
   reducers: {
     setUser: (state, action) => {
-      const { name, avatar, balance, id, email, token, reservedAmount } =
+      const { name, avatar, balance, id, email, isAdmin, reservedAmount } =
         action.payload;
       state.name = name;
       state.avatar = avatar;
       state.balance = balance;
       state.id = id;
       state.email = email;
-      state.token = token;
+      state.isAdmin = isAdmin;
       state.reservedAmount = reservedAmount;
     },
     clearUser: (state) => {
@@ -36,7 +36,7 @@ const userSlice = createSlice({
       state.balance = initialState.balance;
       state.id = initialState.id;
       state.email = initialState.email;
-      state.token = initialState.token;
+      state.isAdmin = initialState.isAdmin;
       state.reservedAmount = initialState.reservedAmount;
     },
   },

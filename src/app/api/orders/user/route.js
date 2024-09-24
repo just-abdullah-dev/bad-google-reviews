@@ -30,7 +30,7 @@ export async function GET(req) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error getting balance document by user id:", error);
+    console.error("Error while fetching user orders: ", error);
     return NextResponse.json(
       {
         success: false,
@@ -44,12 +44,26 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { userId, googleMapLink, noOfReviews, reviewSelectionOpt, reviewLinks, totalCost } = body;
-    if (!userId || !googleMapLink || !noOfReviews || !reviewSelectionOpt || !totalCost) {
+    const {
+      userId,
+      googleMapLink,
+      noOfReviews,
+      reviewSelectionOpt,
+      reviewLinks,
+      totalCost,
+    } = body;
+    if (
+      !userId ||
+      !googleMapLink ||
+      !noOfReviews ||
+      !reviewSelectionOpt ||
+      !totalCost
+    ) {
       return NextResponse.json(
         {
           success: false,
-          message: "Required feild is missing. [ userId, googleMapLink, noOfReviews, reviewSelectionOpt, totalCost ]",
+          message:
+            "Required feild is missing. [ userId, googleMapLink, noOfReviews, reviewSelectionOpt, totalCost ]",
         },
         { status: 400 }
       );
@@ -65,7 +79,7 @@ export async function POST(req) {
         noOfReviews: Number(noOfReviews),
         reviewSelectionOpt,
         reviewLinks: reviewLinks ? reviewLinks : "",
-        totalCost: Number(totalCost)
+        totalCost: Number(totalCost),
       }
     );
     return NextResponse.json(
