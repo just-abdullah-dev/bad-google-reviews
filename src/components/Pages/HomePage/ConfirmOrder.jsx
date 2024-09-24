@@ -59,6 +59,7 @@ export default function ConfirmOrder({ isOpen, onClose, onConfirm, data }) {
       `${Number(user.reservedAmount) + Number(totalAmount)}`
     );
     revalidateTagFunc("user_orders");
+    revalidateTagFunc("all_orders");
     setIsLoading(false);
 
     setOpen(false);

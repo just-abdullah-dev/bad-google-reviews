@@ -80,7 +80,8 @@ export default function DisplayOrderDetails({
       } else {
         setIsError(data.message);
       }
-      revalidateTagFunc("all_orders")
+      revalidateTagFunc("all_orders");
+      revalidateTagFunc("user_orders");
     } catch (error) {
       console.error(error);
       setIsError(error.message);
