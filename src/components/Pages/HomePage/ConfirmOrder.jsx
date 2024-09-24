@@ -12,6 +12,7 @@ import { ShoppingBag } from "lucide-react";
 import { updateUserBalance } from "@/actions/balance/updateUserBalance";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/store/userSlice";
+import { revalidateTagFunc } from "@/services/util";
 
 export default function ConfirmOrder({ isOpen, onClose, onConfirm, data }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +58,7 @@ export default function ConfirmOrder({ isOpen, onClose, onConfirm, data }) {
       ``,
       `${Number(user.reservedAmount) + Number(totalAmount)}`
     );
-
+    revalidateTagFunc("user_orders");
     setIsLoading(false);
 
     setOpen(false);

@@ -6,6 +6,9 @@ export async function getUserWithBalance() {
     const isAdmin = user.labels.includes("admin");
     const res = await fetch(`/api/balance?userId=${user?.$id}`, {
       method: "GET",
+      headers: {
+        "Cache-Control": "no-store", // Disables caching
+      },
     });
     const balanceData = await res.json();
     if (!balanceData?.success) {

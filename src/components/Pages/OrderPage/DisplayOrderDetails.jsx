@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { deductUserBalance } from "@/actions/balance/deductUserBalance";
+import { revalidateTagFunc } from "@/services/util";
 
 export default function DisplayOrderDetails({
   isOpen,
@@ -79,6 +80,7 @@ export default function DisplayOrderDetails({
       } else {
         setIsError(data.message);
       }
+      revalidateTagFunc("all_orders")
     } catch (error) {
       console.error(error);
       setIsError(error.message);
