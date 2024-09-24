@@ -5,8 +5,6 @@ import DisplayOrderDetails from "./DisplayOrderDetails";
 import toast from "react-hot-toast";
 
 const AdminOrders = () => {
-
-
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState("");
   const [orders, setOrders] = useState([]);
@@ -18,7 +16,13 @@ const AdminOrders = () => {
         const requestOptions = {
           method: "GET",
           redirect: "follow",
-          next: { tags: ["all_orders"] },
+          headers: {
+            "Cache-Control": "no-store",
+          },
+          next: {
+            revalidate: 0,
+            tags: ["all_orders"],
+          },
         };
         const res = await fetch(`/api/orders/admin`, requestOptions);
         const data = await res.json();
@@ -72,21 +76,20 @@ const AdminOrders = () => {
     setOrders(updatedOrders);
   };
 
-
-  return (
-    selectedOrder !== null ?
-    <DisplayOrderDetails 
-    order={selectedOrder}
-    isOpen={true}
-    onClose={()=>{
-      setSelectedOrder(null);
-    }}
-    onUpdate={()=>{
-      toast.success("Order has been updated successfully.");
-      setSelectedOrder(null);
-      window.location.reload();
-    }}
-    /> :
+  return selectedOrder !== null ? (
+    <DisplayOrderDetails
+      order={selectedOrder}
+      isOpen={true}
+      onClose={() => {
+        setSelectedOrder(null);
+      }}
+      onUpdate={() => {
+        toast.success("Order has been updated successfully.");
+        setSelectedOrder(null);
+        window.location.reload();
+      }}
+    />
+  ) : (
     <div className="container mx-auto px-4 py-8">
       <div className="overflow-x-auto">
         <table className="min-w-full bg-transparent">
@@ -116,7 +119,13 @@ const AdminOrders = () => {
             {orders.map((order, index) => (
               <tr
                 key={index}
-                className={`${order.status === "fulfilled" ? " bg-green-200 " : order.status === "unfulfilled" ? " bg-red-200 " : "hover:bg-gray-300 hover:bg-opacity-45 "} border-b border-gray-300   duration-300 cursor-pointer`}
+                className={`${
+                  order.status === "fulfilled"
+                    ? " bg-green-200 "
+                    : order.status === "unfulfilled"
+                    ? " bg-red-200 "
+                    : "hover:bg-gray-300 hover:bg-opacity-45 "
+                } border-b border-gray-300   duration-300 cursor-pointer`}
                 onClick={() => {
                   setSelectedOrder(order);
                 }}

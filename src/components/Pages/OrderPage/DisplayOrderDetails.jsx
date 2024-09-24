@@ -68,12 +68,8 @@ export default function DisplayOrderDetails({
             order?.userId,
             `${process.env.NEXT_PUBLIC_PRICE_PER_REVIEW * Number(reviews)}`
           );
-        }else if (status === "unfulfilled") {
-          await deductUserBalance(
-            order?.userId,
-            `${order.totalCost}`,
-            "yes"
-          );
+        } else if (status === "unfulfilled") {
+          await deductUserBalance(order?.userId, `${order.totalCost}`, "yes");
         }
         setOpen(false);
         onUpdate();
@@ -97,8 +93,7 @@ export default function DisplayOrderDetails({
             Order Details
           </DialogTitle>
           <DialogDescription>
-            {isError && 
-            <span className=" text-red-500">{isError}</span>}
+            {isError && <span className=" text-red-500">{isError}</span>}
           </DialogDescription>
         </DialogHeader>
         <div className=" w-full md:w-[400px] text-sm ">
