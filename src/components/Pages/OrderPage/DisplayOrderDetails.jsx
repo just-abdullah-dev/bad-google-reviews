@@ -166,6 +166,14 @@ export default function DisplayOrderDetails({
               {order.status === "fulfilled" ||
               order.status === "partially-fulfilled" ||
               order.status === "unfulfilled" ? (
+                <span className="text-black">
+                  {" "}
+                  {order.status
+                    .split("-")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")}
+                </span>
+              ) : (
                 <select
                   value={status}
                   onChange={(e) => {
@@ -184,14 +192,6 @@ export default function DisplayOrderDetails({
                     </option>
                   ))}
                 </select>
-              ) : (
-                <p className="text-black">
-                  {" "}
-                  {order.status
-                    .split("-")
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ")}
-                </p>
               )}
             </td>
             {/* Select Number of Reviews */}
@@ -199,26 +199,35 @@ export default function DisplayOrderDetails({
               {status === "partially-fulfilled" && (
                 <>
                   {isError && <p className="text-sm text-red-500">{isError}</p>}
-                  <select
-                    id="deletedNoOfReviews"
-                    className="bg-white border border-gray-300 rounded-md p-2"
-                    value={deletedNoOfReviews}
-                    onChange={(e) => {
-                      setDeletedNoOfReviews(e.target.value);
-                    }}
-                  >
-                    <option value="" disabled>
-                      Select number of deleted reviews
-                    </option>
-                    {Array.from(
-                      { length: order.noOfReviews },
-                      (_, i) => i + 1
-                    ).map((num) => (
-                      <option key={num} value={num}>
-                        {num}
+                  {order.status === "fulfilled" ||
+                  order.status === "partially-fulfilled" ||
+                  order.status === "unfulfilled" ? (
+                    <span className="text-black">
+                      {" "}
+                      Deleted Number of Reviews: {order?.deletedNoOfReviews}
+                    </span>
+                  ) : (
+                    <select
+                      id="deletedNoOfReviews"
+                      className="bg-white border border-gray-300 rounded-md p-2"
+                      value={deletedNoOfReviews}
+                      onChange={(e) => {
+                        setDeletedNoOfReviews(e.target.value);
+                      }}
+                    >
+                      <option value="" disabled>
+                        Select number of deleted reviews
                       </option>
-                    ))}
-                  </select>
+                      {Array.from(
+                        { length: order.noOfReviews },
+                        (_, i) => i + 1
+                      ).map((num) => (
+                        <option key={num} value={num}>
+                          {num}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </>
               )}
             </div>
