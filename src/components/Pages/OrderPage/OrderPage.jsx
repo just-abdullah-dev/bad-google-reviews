@@ -11,7 +11,7 @@ import LoadingScreen from "@/components/ui/LoadingScreen";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
 import { setUser } from "@/store/userSlice";
 
-export default function OrderPage() {
+export default function OrderPage({ isAdmin = false }) {
   const user = useSelector((state) => state.user);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -23,6 +23,9 @@ export default function OrderPage() {
       try {
         const data = await getUserWithBalance();
         dispatch(setUser(data));
+        if (data?.isAdmin) {
+          router.push("/");
+        }
       } catch (error) {
         toast.error("Kindly login first!");
         router.push("/");
@@ -32,7 +35,11 @@ export default function OrderPage() {
     if (!user.id) {
       main();
     } else {
-      setIsLoading(false);
+      if (user?.isAdmin && !isAdmin) {
+        router.push("/");
+      }else{
+        setIsLoading(false);
+      }
     }
   }, []);
   if (isLoading) {
@@ -52,7 +59,7 @@ export default function OrderPage() {
               type="text"
             />
           </div>
-          {user.isAdmin ? <AdminOrders /> : <UserOrders userId={user?.id} />}
+          {isAdmin ? <AdminOrders /> : <UserOrders userId={user?.id} />}
         </div>
       </div>
     </Layout>

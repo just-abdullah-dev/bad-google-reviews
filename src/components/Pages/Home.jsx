@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/store/userSlice";
 import LoadingScreen from "../ui/LoadingScreen";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
+import OrderPage from "./OrderPage/OrderPage";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,7 +29,7 @@ export default function Home() {
     };
     if (!user.id) {
       main();
-    }else{
+    } else {
       setIsLoading(false);
       setIsLoggedIn(true);
     }
@@ -36,5 +37,13 @@ export default function Home() {
   if (isLoading) {
     return <LoadingScreen />;
   }
-  return isLoggedIn ? <HomePage /> : <LandingPage />;
+  return isLoggedIn ? (
+    user.isAdmin ? (
+      <OrderPage isAdmin={true} />
+    ) : (
+      <HomePage />
+    )
+  ) : (
+    <LandingPage />
+  );
 }

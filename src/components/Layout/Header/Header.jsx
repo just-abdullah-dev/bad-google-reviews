@@ -30,32 +30,36 @@ export default function Header() {
         </div>
 
         {/* Center Navigation Links (Hidden on mobile) */}
-        <nav className="hidden md:flex space-x-8">
-          <Link
-            href="/"
-            className="hover:scale-[1.1] duration-500 transition-all"
-          >
-            Home
-          </Link>
-          <Link
-            href="/topup"
-            className="hover:scale-[1.1] duration-500 transition-all"
-          >
-            Topup
-          </Link>
-          <Link
-            href="/orders"
-            className="hover:scale-[1.1] duration-500 transition-all"
-          >
-            Orders
-          </Link>
-        </nav>
+        {!user?.isAdmin && (
+          <nav className="hidden md:flex space-x-8">
+            <Link
+              href="/"
+              className="hover:scale-[1.1] duration-500 transition-all"
+            >
+              Home
+            </Link>
+            <Link
+              href="/topup"
+              className="hover:scale-[1.1] duration-500 transition-all"
+            >
+              Topup
+            </Link>
+            <Link
+              href="/orders"
+              className="hover:scale-[1.1] duration-500 transition-all"
+            >
+              Orders
+            </Link>
+          </nav>
+        )}
 
         {/* Right Side Avatar and Balance */}
         <div className="hidden md:flex items-center space-x-4 relative">
+        {!user?.isAdmin &&
           <span className="font-semibold">
-            {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {Number(user.balance).toFixed(2)}
-          </span>
+            {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}{" "}
+            {Number(user.balance).toFixed(2)}
+          </span>}
           <div className="flex items-center gap-2 cursor-pointer group">
             <User2
               strokeWidth={1.5}
@@ -94,9 +98,11 @@ export default function Header() {
         }`}
       >
         <div className="flex justify-end items-center space-x-4 text-lg">
+        {!user?.isAdmin &&
           <span className="font-semibold">
-            {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {Number(user.balance).toFixed(2)}
-          </span>
+            {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}{" "}
+            {Number(user.balance).toFixed(2)}
+          </span>}
           <div className="flex items-center gap-2 cursor-pointer group">
             <User2
               strokeWidth={1.5}
@@ -116,6 +122,7 @@ export default function Header() {
             </div>
           </div>
         </div>
+        {!user?.isAdmin &&
         <nav className=" p-4 space-y-4 flex flex-col text-3xl ">
           <Link
             href="/"
@@ -135,7 +142,7 @@ export default function Header() {
           >
             Orders
           </Link>
-        </nav>
+        </nav>}
       </div>
     </header>
   );

@@ -26,16 +26,25 @@ export default function TopupPage() {
       try {
         const data = await getUserWithBalance();
         dispatch(setUser(data));
+        if (data?.isAdmin) {
+          router.push("/");
+        } else {
+          setIsLoading(false);
+        }
       } catch (error) {
         toast.error("Kindly login first!");
         router.push("/");
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
     if (!user.id) {
       main();
     } else {
-      setIsLoading(false);
+      if (user?.isAdmin) {
+        router.push("/");
+      } else {
+        setIsLoading(false);
+      }
     }
   }, []);
 
@@ -97,7 +106,8 @@ export default function TopupPage() {
                 Current Balance
               </h1>
               <p className="text-center font-semibold text-3xl md:text-4xl">
-                {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {Number(user.balance).toFixed(2)}
+                {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}{" "}
+                {Number(user.balance).toFixed(2)}
               </p>
             </div>
             <div className="grid gap-2">
