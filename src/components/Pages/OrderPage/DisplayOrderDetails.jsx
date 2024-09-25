@@ -48,33 +48,40 @@ export default function DisplayOrderDetails({
     try {
       const res = await fetch("/api/orders/admin", {
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           orderId: order?.$id,
           status,
           deletedNoOfReviews:
-            status === "fulfilled" ? order.noOfReviews : deletedNoOfReviews,
+            status === "fulfilled"
+              ? `${order.noOfReviews}`
+              : `${deletedNoOfReviews}`,
         }),
       });
-      const data = await res.json();
-      if (data?.success) {
-        if (status === "fulfilled" || status === "partially-fulfilled") {
-          const reviews =
-            status === "fulfilled"
-              ? order.noOfReviews
-              : status === "partially-fulfilled"
-              ? deletedNoOfReviews
-              : 0;
-          await deductUserBalance(
-            order?.userId,
-            `${process.env.NEXT_PUBLIC_PRICE_PER_REVIEW * Number(reviews)}`
-          );
-        } else if (status === "unfulfilled") {
-          await deductUserBalance(order?.userId, `${order.totalCost}`, "yes");
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.success) {
+          if (status === "fulfilled" || status === "partially-fulfilled") {
+            const reviews =
+              status === "fulfilled"
+                ? order.noOfReviews
+                : status === "partially-fulfilled"
+                ? deletedNoOfReviews
+                : 0;
+            await deductUserBalance(
+              order?.userId,
+              `${process.env.NEXT_PUBLIC_PRICE_PER_REVIEW * Number(reviews)}`
+            );
+          } else if (status === "unfulfilled") {
+            await deductUserBalance(order?.userId, `${order.totalCost}`, "yes");
+          }
+          setOpen(false);
+          onUpdate();
+        } else {
+          setIsError(data.message);
         }
-        setOpen(false);
-        onUpdate();
-      } else {
-        setIsError(data.message);
       }
       revalidateTagFunc("all_orders");
       revalidateTagFunc("user_orders");

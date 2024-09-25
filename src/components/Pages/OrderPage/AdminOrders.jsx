@@ -95,22 +95,22 @@ const AdminOrders = () => {
         <table className="min-w-full bg-transparent">
           <thead>
             <tr className="bg-gray-100 text-left border-b border-gray-400">
-              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 Date/Time
               </th>
-              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 Order ID
               </th>
-              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 No of Reviews
               </th>
-              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 Status
               </th>
-              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 Total Cost
               </th>
-              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 Final Cost
               </th>
             </tr>
@@ -130,25 +130,25 @@ const AdminOrders = () => {
                   setSelectedOrder(order);
                 }}
               >
-                <td className="py-3 px-4 text-gray-800 text-sm">
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {formatDate(order?.$createdAt)}
                 </td>
-                <td className="py-3 px-4 text-gray-800 text-sm">{order.$id}</td>
-                <td className="py-3 px-4 text-gray-800 text-sm">
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">{order.$id}</td>
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {order.noOfReviews}
                 </td>
 
-                <td className="py-3 px-4 text-gray-800 text-sm">
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {order.status
                     .split("-")
                     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(" ")}
                 </td>
 
-                <td className="py-3 px-4 text-gray-800 text-sm">
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {order.totalCost}
                 </td>
-                <td className="py-3 px-4 text-gray-800 text-sm">
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {order.finalCost !== null
                     ? `${process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} ${order.finalCost}`
                     : "N/A"}

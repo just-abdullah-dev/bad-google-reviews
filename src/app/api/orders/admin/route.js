@@ -51,10 +51,10 @@ export async function PUT(req) {
     };
     if (status === "fulfilled" || status === "partially-fulfilled") {
       data = {
-        ...data,
+        status,
         finalCost:
-          process.env.NEXT_PUBLIC_PRICE_PER_REVIEW *
-          Number(deletedNoOfReviews),
+          (process.env.NEXT_PUBLIC_PRICE_PER_REVIEW *
+          Number(deletedNoOfReviews)),
         deletedNoOfReviews: Number(deletedNoOfReviews),
       };
     }

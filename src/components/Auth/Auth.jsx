@@ -118,7 +118,7 @@ export default function Auth({ closeModal }) {
 
   return (
     <div className="flex justify-center items-center h-fit relative rounded-xl px-4 bg-gray-100 z-[3]">
-      <Card className="w-fit md:w-[390px]">
+      <Card className="w-fit md:w-[390px] shadow-none bg-gray-100">
         <div
           className="absolute top-3 right-3 cursor-pointer"
           onClick={closeModal}

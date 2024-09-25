@@ -41,19 +41,19 @@ const UserOrders = ({ userId }) => {
         <table className="min-w-full bg-transparent">
           <thead>
             <tr className="bg-gray-100 text-left border-b border-gray-400">
-              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 Date and Time
               </th>
-              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 No of Reviews
               </th>
-              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 Google Map Links
               </th>
-              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 Status
               </th>
-              <th className="py-3 px-4 font-semibold text-sm text-gray-700">
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 Total Cost
               </th>
             </tr>
@@ -64,13 +64,13 @@ const UserOrders = ({ userId }) => {
                 key={index}
                 className={`${item.status === "fulfilled" ? " bg-green-200 " : item.status === "unfulfilled" ? " bg-red-200 " : "hover:bg-gray-300 hover:bg-opacity-45 "} border-b border-gray-300   duration-300 cursor-pointer`}
               >
-                <td className="py-3 px-4 text-gray-800 text-sm">
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {formatDate(item?.$createdAt)}
                 </td>
-                <td className="py-3 px-4 text-gray-800 text-sm">
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {item?.noOfReviews}
                 </td>
-                <td className="py-3 px-4 text-blue-500 text-sm">
+                <td className="py-3 px-4 text-blue-500 text-[12px] md:text-sm">
                   <Link
                     href={item?.googleMapLink}
                     target="_blank"
@@ -80,13 +80,13 @@ const UserOrders = ({ userId }) => {
                     Google Map Link
                   </Link>
                 </td>
-                <td className="py-3 px-4 text-gray-800 text-sm">
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {item?.status
                     .split("-")
                     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(" ")}
                 </td>
-                <td className="py-3 px-4 text-gray-800 text-sm">
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {item?.totalCost}
                 </td>
               </tr>
