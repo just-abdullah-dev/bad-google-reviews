@@ -212,18 +212,30 @@ export default function DisplayOrderDetails({
             </div>
           </div>
         </div>
-        <div className="mt-6 flex w-full md:w-[400px] justify-between items-center">
-          <Button disabled={isLoading} onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button
-            disabled={isLoading}
-            className=" bg-blue-600 hover:bg-blue-500"
-            onClick={handleUpdate}
-          >
-            {isLoading ? "Please wait..." : "Update"}
-          </Button>
-        </div>
+        {order.status === "fulfilled" ||
+        order.status === "partially-fulfilled" ||
+        order.status === "unfulfilled" ? (
+          <div>
+            {order.status
+              .split("-")
+              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(" ")}{" "}
+            order are only available for view.
+          </div>
+        ) : (
+          <div className="mt-6 flex w-full md:w-[400px] justify-between items-center">
+            <Button disabled={isLoading} onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button
+              disabled={isLoading}
+              className=" bg-blue-600 hover:bg-blue-500"
+              onClick={handleUpdate}
+            >
+              {isLoading ? "Please wait..." : "Update"}
+            </Button>
+          </div>
+        )}
       </DialogContent>
       {open && (
         <div

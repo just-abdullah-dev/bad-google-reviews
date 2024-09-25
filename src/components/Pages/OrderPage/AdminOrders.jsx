@@ -55,26 +55,6 @@ const AdminOrders = () => {
   const formatDate = (date) => {
     return format(new Date(date), "yyyy-MM-dd hh:mm a");
   };
-  const handleStatusChange = (index, newStatus) => {
-    const updatedOrders = [...orders];
-    updatedOrders[index].currentStatus = newStatus;
-
-    // If partially fulfilled, prompt for number of reviews fulfilled
-    if (newStatus === "partially fulfilled") {
-      const fulfilledReviews = prompt("Enter the number of reviews fulfilled:");
-      if (fulfilledReviews) {
-        const finalCost = fulfilledReviews * 25; // {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}25 per review
-        updatedOrders[index].finalCost = finalCost;
-      }
-    } else if (newStatus === "fulfilled") {
-      // If fully fulfilled, set final cost equal to total cost
-      updatedOrders[index].finalCost = updatedOrders[index].totalCost;
-    } else {
-      updatedOrders[index].finalCost = null;
-    }
-
-    setOrders(updatedOrders);
-  };
 
   return selectedOrder !== null ? (
     <DisplayOrderDetails
@@ -122,6 +102,8 @@ const AdminOrders = () => {
                 className={`${
                   order.status === "fulfilled"
                     ? " bg-green-200 "
+                    :order.status === "partially-fulfilled"
+                    ? " bg-green-100 "
                     : order.status === "unfulfilled"
                     ? " bg-red-200 "
                     : "hover:bg-gray-300 hover:bg-opacity-45 "
