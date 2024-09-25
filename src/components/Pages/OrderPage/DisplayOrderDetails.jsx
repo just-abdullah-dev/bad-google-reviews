@@ -166,7 +166,7 @@ export default function DisplayOrderDetails({
               {order.status === "fulfilled" ||
               order.status === "partially-fulfilled" ||
               order.status === "unfulfilled" ? (
-                <span className="text-black">
+                <span className="">
                   {" "}
                   {order.status
                     .split("-")
@@ -202,7 +202,7 @@ export default function DisplayOrderDetails({
                   {order.status === "fulfilled" ||
                   order.status === "partially-fulfilled" ||
                   order.status === "unfulfilled" ? (
-                    <span className="text-black">
+                    <span className="text-black font-medium">
                       {" "}
                       Deleted Number of Reviews: {order?.deletedNoOfReviews}
                     </span>
