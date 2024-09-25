@@ -163,24 +163,36 @@ export default function DisplayOrderDetails({
             )}
             <td className=" font-medium text-black">
               Current Status:{" "}
-              <select
-                value={status}
-                onChange={(e) => {
-                  setStatus(e.target.value);
-                }}
-                className="bg-gray-200 border rounded pl-3 py-1"
-              >
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status
-                      .split("-")
-                      .map(
-                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
-                      )
-                      .join(" ")}
-                  </option>
-                ))}
-              </select>
+              {order.status === "fulfilled" ||
+              order.status === "partially-fulfilled" ||
+              order.status === "unfulfilled" ? (
+                <select
+                  value={status}
+                  onChange={(e) => {
+                    setStatus(e.target.value);
+                  }}
+                  className="bg-gray-200 border rounded pl-3 py-1"
+                >
+                  {statuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status
+                        .split("-")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ")}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <p className="text-black">
+                  {" "}
+                  {order.status
+                    .split("-")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")}
+                </p>
+              )}
             </td>
             {/* Select Number of Reviews */}
             <div className="grid w-full items-center gap-4">

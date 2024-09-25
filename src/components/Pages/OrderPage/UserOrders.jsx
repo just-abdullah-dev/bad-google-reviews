@@ -4,7 +4,6 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 const UserOrders = ({ userId }) => {
-  
   const [userOrders, setUserOrders] = useState("loading");
   useEffect(() => {
     const main = async () => {
@@ -62,7 +61,15 @@ const UserOrders = ({ userId }) => {
             {userOrders?.data?.documents.map((item, index) => (
               <tr
                 key={index}
-                className={`${item.status === "fulfilled" ? " bg-green-200 " : item.status === "unfulfilled" ? " bg-red-200 " : "hover:bg-gray-300 hover:bg-opacity-45 "} border-b border-gray-300   duration-300 cursor-pointer`}
+                className={`${
+                  item.status === "fulfilled"
+                    ? " bg-green-200 "
+                    : item.status === "partially-fulfilled"
+                    ? " bg-green-100 "
+                    : item.status === "unfulfilled"
+                    ? " bg-red-200 "
+                    : "hover:bg-gray-300 hover:bg-opacity-45 "
+                } border-b border-gray-300   duration-300 `}
               >
                 <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {formatDate(item?.$createdAt)}
