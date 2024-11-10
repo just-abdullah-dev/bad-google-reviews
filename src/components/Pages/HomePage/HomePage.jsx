@@ -36,7 +36,7 @@ export default function HomePage() {
                   3- Place order and wait until the review is deleted
                 </h1>
                 <p className="pl-4">
-                  Once you’ve placed an order, our team will work to have the
+                  Once you&apos;ve placed an order, our team will work to have the
                   negative review removed.
                 </p>
               </div>

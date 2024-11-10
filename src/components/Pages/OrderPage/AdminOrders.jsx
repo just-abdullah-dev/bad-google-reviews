@@ -96,7 +96,7 @@ const AdminOrders = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order, index) => (
+            {[...orders].reverse().map((order, index) => (
               <tr
                 key={index}
                 className={`${

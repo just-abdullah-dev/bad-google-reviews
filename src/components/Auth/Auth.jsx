@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/userSlice";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 export default function Auth({ closeModal }) {
   const dispatch = useDispatch();
@@ -116,6 +117,18 @@ export default function Auth({ closeModal }) {
     }
   };
 
+  const handleWithGoogle = async () => {
+    try {
+      account.createOAuth2Session(
+        "google",
+        process.env.NEXT_PUBLIC_SUCCESS_URL,
+        `${process.env.NEXT_PUBLIC_FAIL_URL}?type=google`
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center h-fit relative rounded-xl px-4 bg-gray-100 z-[3]">
       <Card className="w-fit md:w-[390px] shadow-none border-none bg-gray-100">
@@ -139,6 +152,21 @@ export default function Auth({ closeModal }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className=" w-full">
+            <Button
+              disabled={isLoading}
+              className="w-full disabled:cursor-not-allowed outline-1 outline"
+              onClick={handleWithGoogle}
+              variant="outline"
+            >
+              {isLoading
+                ? "Please wait..."
+                : isLogin
+                ? "Login with Google"
+                : "Sign Up with Google"}
+            </Button>
+            <p className=" text-gray-700 text- text-center my-3">OR</p>
+          </div>
           <form onSubmit={handleSubmit} className=" text-sm md:text-base">
             {!isLogin && (
               <div className="grid w-full items-center gap-4 mb-4">

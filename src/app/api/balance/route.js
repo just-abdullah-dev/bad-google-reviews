@@ -22,6 +22,16 @@ export async function GET(req) {
     const response = await ssDatabase.listDocuments(db_id, collection_id, [
       Query.equal("userId", userId),
     ]);
+    if (response?.total === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "no document was found!",
+        },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: true,

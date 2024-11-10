@@ -1,9 +1,12 @@
-import { ssDatabase } from "@/lib/app_write_server";
+import { ssDatabase, ssUsers } from "@/lib/app_write_server";
+import { sendMail } from "@/lib/sendMail";
 import { NextResponse } from "next/server";
-import { ID, Query } from "node-appwrite";
+import { Query } from "node-appwrite";
 
 const db_id = process.env.APPWRITE_DB_ID;
 const collection_id = process.env.APPWRITE_ORDERS_C_ID;
+const support_email = process.env.SUPPORT_EMAIL;
+
 
 const allowedOrigins = [
   "https://bad-google-reviews.vercel.app",
@@ -85,6 +88,7 @@ export async function PUT(req) {
       let data = {
         status,
       };
+
       if (status === "fulfilled" || status === "partially-fulfilled") {
         data = {
           status,
@@ -100,7 +104,80 @@ export async function PUT(req) {
         order?.$id,
         data
       );
-      // console.log(response);
+
+      
+    const user = await ssUsers.get(order.userId)
+
+      // send mail to user according type of status
+      // total type of statuses: pending, unfulfilled, fulfilled, cancelled, submitted-to-google, partially-fulfilled
+      let mailData = {
+        fullName: user.name,
+        email: user.email,
+        orderId: order?.$id,
+        message: "",
+      };
+
+      switch (status) {
+        case "pending":
+          mailData = {
+            ...mailData,
+            message: `
+              Thank you for reaching out. Your request is currently <b>pending</b>. 
+              We're reviewing it and will update you shortly. For any questions, 
+              contact us at <a href="mailto:${support_email}">${support_email}</a>.
+            `,
+          };
+          break;
+
+        case "unfulfilled":
+          mailData = {
+            ...mailData,
+            message: `
+              Your request is currently <b>unfulfilled</b>. We are actively working on it and will update you once it's completed. If you need assistance, contact us at <a href="mailto:${support_email}">${support_email}</a>.
+            `,
+          };
+          break;
+
+        case "fulfilled":
+          mailData = {
+            ...mailData,
+            message: `
+                Good news! Your request has been <b>fulfilled</b>. If you have further questions, feel free to reach out at <a href="mailto:${support_email}">${support_email}</a>.
+              `,
+          };
+          break;
+
+        case "cancelled":
+          mailData = {
+            ...mailData,
+            message: `
+                  Your request has been <b>cancelled</b>. If you believe this was a mistake, please get in touch with us at <a href="mailto:${support_email}">${support_email}</a>.
+                `,
+          };
+          break;
+
+        case "submitted-to-google":
+          mailData = {
+            ...mailData,
+            message: `
+                    Your request has been <b>submitted to Google</b> for further processing. We'll update you soon. For any questions, reach out at <a href="mailto:${support_email}">${support_email}</a>.
+                  `,
+          };
+          break;
+        case "partially-fulfilled":
+          mailData = {
+            ...mailData,
+            message: `
+                       Your request has been <b>partially fulfilled</b>. Total ${deletedNoOfReviews} reviews has been deleted. For any assistance, please contact us at <a href="mailto:${support_email}">${support_email}</a>.
+                    `,
+          };
+          break;
+
+        default:
+          break;
+      }
+
+      await sendMailToCustomer(mailData);
       return NextResponse.json(
         {
           success: true,
@@ -125,5 +202,21 @@ export async function PUT(req) {
       },
       { status: 500 }
     );
+  }
+}
+
+async function sendMailToCustomer(data) {
+  try {
+    const message = `
+  <br>Hi <b>${data?.fullName}!</b>
+  <br><br>Your order id: ${data?.orderId}
+  <br><br>${data?.message}
+  <br><br>Best Regards, <br>Your Team
+`;
+
+    const result = await sendMail(data?.email, `Update on order!`, message);
+    return result;
+  } catch (error) {
+    console.error(error);
   }
 }

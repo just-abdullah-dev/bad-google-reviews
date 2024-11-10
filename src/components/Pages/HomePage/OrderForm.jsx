@@ -12,6 +12,7 @@ import ConfirmOrder from "./ConfirmOrder";
 export default function OrderForm() {
   const router = useRouter();
   const user = useSelector((state) => state.user);
+
   const [confirmOrder, setConfirmOrder] = useState(false);
   const [formData, setFormData] = useState({
     googleMapLink: "",
@@ -63,7 +64,9 @@ export default function OrderForm() {
           alert(
             `Your ${process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} ${
               user.reservedAmount
-            } is already reserved for previous orders. You need ${process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} ${
+            } is already reserved for previous orders. You need ${
+              process.env.NEXT_PUBLIC_CURRENCY_SYMBOL
+            } ${
               totalAmount - (Number(user.balance) - Number(user.reservedAmount))
             } more.`
           );

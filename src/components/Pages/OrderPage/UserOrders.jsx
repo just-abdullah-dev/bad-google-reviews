@@ -5,6 +5,8 @@ import React, { useState, useEffect } from "react";
 
 const UserOrders = ({ userId }) => {
   const [userOrders, setUserOrders] = useState("loading");
+  console.log(userOrders);
+  
   useEffect(() => {
     const main = async () => {
       const requestOptions = {
@@ -19,7 +21,9 @@ const UserOrders = ({ userId }) => {
       const data = await res.json();
       setUserOrders(data);
     };
-    main();
+    if (userOrders === "loading") {
+      main();
+    }
   }, []);
 
   if (userOrders === "loading") {
@@ -44,6 +48,9 @@ const UserOrders = ({ userId }) => {
                 Date and Time
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
+                Order ID
+              </th>
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 No of Reviews
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
@@ -55,10 +62,13 @@ const UserOrders = ({ userId }) => {
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 Total Cost
               </th>
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
+                Charged Amount
+              </th>
             </tr>
           </thead>
           <tbody>
-            {userOrders?.data?.documents.map((item, index) => (
+            {[...userOrders?.data?.documents].reverse().map((item, index) => (
               <tr
                 key={index}
                 className={`${
@@ -74,6 +84,7 @@ const UserOrders = ({ userId }) => {
                 <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {formatDate(item?.$createdAt)}
                 </td>
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">{item.$id}</td>
                 <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {item?.noOfReviews}
                 </td>
@@ -92,9 +103,14 @@ const UserOrders = ({ userId }) => {
                     .split("-")
                     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(" ")}
+                    {item?.status === "partially-fulfilled" ?
+                    ` (${item?.deletedNoOfReviews})`:""}
                 </td>
                 <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {item?.totalCost}
+                </td>
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
+                  {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {item?.finalCost}
                 </td>
               </tr>
             ))}
