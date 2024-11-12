@@ -4,10 +4,10 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 const UserOrders = ({ userId, trans }) => {
+  const [userOrders, setUserOrders] = useState("loading");
   if (userId === "") {
     return;
   }
-  const [userOrders, setUserOrders] = useState("loading");
 
   useEffect(() => {
     const main = async () => {
