@@ -2,7 +2,7 @@
 import ErrorScreen from "@/components/ui/ErrorScreen";
 import React from "react";
 
-export default function page({ searchParams }) {
+export default function Page({ searchParams }) {
   if (searchParams?.type !== "google") {
     window.location.href = "/";
     return;

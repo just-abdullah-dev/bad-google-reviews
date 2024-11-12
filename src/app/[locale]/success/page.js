@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
-export default function page() {
+export default function Page() {
   const dispatch = useDispatch();
 
   useEffect(() => {
