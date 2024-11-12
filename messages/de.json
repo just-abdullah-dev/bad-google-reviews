@@ -85,7 +85,7 @@
   "OrdersPage": {
     "errorMsg": "Keine Bestellhistorie gefunden.",
     "title": "Bestellhistorie",
-    "th1": "Datum und Uhrzeit",
+    "th1": "Datum/Uhrzeit",
     "th2": "Bestell-ID",
     "th3": "Anzahl der Bewertungen",
     "th4": "Google Map Links",

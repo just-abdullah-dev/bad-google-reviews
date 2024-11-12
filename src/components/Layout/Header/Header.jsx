@@ -151,7 +151,10 @@ export default function Header() {
             </Link>
           </nav>
         )}
+        <div className=" relative">
+          
         <LangSwitch />
+        </div>
       </div>
     </header>
   );

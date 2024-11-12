@@ -85,7 +85,7 @@
   "OrdersPage": {
     "errorMsg": "No order history found.",
     "title": "Orders History",
-    "th1": "Date and Time",
+    "th1": "Date/Time",
     "th2": "Order ID",
     "th3": "No of Reviews",
     "th4": "Google Map Links",
