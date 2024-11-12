@@ -8,6 +8,6 @@ export const pathnames = {
 export const localePrefix = 'always';
 
 export const port = process.env.PORT || 3000;
-export const host = process.env.DOMAIN_NAME
-  ? `https://${process.env.DOMAIN_NAME}`
+export const host = process.env.NEXT_PUBLIC_DOMAIN_NAME
+  ? `https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}`
   : `http://localhost:${port}`;
