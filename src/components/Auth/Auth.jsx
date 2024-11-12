@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/store/userSlice";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
 import { useTranslations } from "next-intl";
+import { host } from "@/config";
 
 export default function Auth({ closeModal }) {
   const signUpTrans = useTranslations("SignUp");
@@ -124,8 +125,8 @@ export default function Auth({ closeModal }) {
     try {
       account.createOAuth2Session(
         "google",
-        process.env.NEXT_PUBLIC_SUCCESS_URL,
-        `${process.env.NEXT_PUBLIC_FAIL_URL}?type=google`
+        `${host}/success`,
+        `${host}/fail?type=google`
       );
     } catch (error) {
       console.error(error);
