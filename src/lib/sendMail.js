@@ -21,7 +21,7 @@ export async function sendMail(email, subject, message) {
 
     const info = await transporter.sendMail({
       from: {
-        name: "Brand Name",
+        name: "25 Euro Loeschung",
         address: process.env.SITE_EMAIL,
       },
       to: email,

@@ -41,7 +41,7 @@ export default function LandingPage() {
       >
         <div className=" absolute top-0 left-0 py-4 px-24 flex items-center justify-between w-full">
           <Link href={"/"} className=" text-lg font-semibold">
-            Brand Name
+            25 Euro Loeschung
           </Link>
           <LangSwitch />
         </div>
