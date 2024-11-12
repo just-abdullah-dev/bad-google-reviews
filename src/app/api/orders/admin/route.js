@@ -106,7 +106,7 @@ export async function PUT(req) {
       );
 
       
-    const user = await ssUsers.get(order.userId)
+    const user = await ssUsers.get(order.userId);
 
       // send mail to user according type of status
       // total type of statuses: pending, unfulfilled, fulfilled, cancelled, submitted-to-google, partially-fulfilled

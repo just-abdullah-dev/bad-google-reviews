@@ -9,16 +9,17 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import PayPal from "./PayPal";
 import Stripe from "./Stripe";
-import { useRouter } from "next/navigation";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
 import { setUser } from "@/store/userSlice";
 import LoadingScreen from "@/components/ui/LoadingScreen";
+import { useTranslations } from "next-intl";
+import { redirect } from "@/i18n/routing";
 
 export default function TopupPage() {
   const user = useSelector((state) => state.user);
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+  const trans = useTranslations("TopupPage");
 
   useEffect(() => {
     const main = async () => {
@@ -27,13 +28,13 @@ export default function TopupPage() {
         const data = await getUserWithBalance();
         dispatch(setUser(data));
         if (data?.isAdmin) {
-          router.push("/");
+          redirect("/");
         } else {
           setIsLoading(false);
         }
       } catch (error) {
         toast.error("Kindly login first!");
-        router.push("/");
+        redirect("/");
         setIsLoading(false);
       }
     };
@@ -41,7 +42,7 @@ export default function TopupPage() {
       main();
     } else {
       if (user?.isAdmin) {
-        router.push("/");
+        redirect("/");
       } else {
         setIsLoading(false);
       }
@@ -85,25 +86,25 @@ export default function TopupPage() {
       <div className=" grid md:place-items-center py-4 px-8 min-h-[calc(100vh-64px)] max-h-fit w-full">
         {startPayPalCheckout ? (
           <div>
-            <PayPal amount={formData?.amount} goBack={goBack} />
+            <PayPal trans={trans} amount={formData?.amount} goBack={goBack} />
           </div>
         ) : startStripeCheckout ? (
           <div>
-            <Stripe amount={formData?.amount} goBack={goBack} />
+            <Stripe trans={trans} amount={formData?.amount} goBack={goBack} />
           </div>
         ) : (
           <div className=" w-full md:w-[600px] md:h-full grid gap-6">
             <div className=" text-center grid md:gap-2">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-                Topup of your account
+                {trans("title")}
               </h1>
               <p className=" text-gray-800 text-sm md:text-base">
-                Add funds to your account using <b>PayPal</b> or <b>Stripe</b>.
+                {trans("p")}
               </p>
             </div>
             <div className="grid gap-2">
               <h1 className=" font-semibold text-xl md:text-2xl">
-                Current Balance
+                {trans("heading1")}
               </h1>
               <p className="text-center font-semibold text-3xl md:text-4xl">
                 {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}{" "}
@@ -112,7 +113,7 @@ export default function TopupPage() {
             </div>
             <div className="grid gap-2">
               <h1 className=" font-semibold text-xl md:text-2xl">
-                Payment Method
+                {trans("heading2")}
               </h1>
 
               <div className="flex items-center justify-around">
@@ -160,10 +161,10 @@ export default function TopupPage() {
             </div>
             <div className=" grid gap-2">
               <h1 className=" font-semibold text-xl md:text-2xl">
-                Topup Amount
+                {trans("heading3")}
               </h1>
               <div className="grid w-full items-center gap-2 mb-4">
-                <Label htmlFor="amount">Amount</Label>
+                <Label htmlFor="amount">{trans("inputAmountLabel")}</Label>
                 <Input
                   type="number"
                   className=" bg-white"
@@ -178,7 +179,7 @@ export default function TopupPage() {
                 />
               </div>
               <Button className="w-full" onClick={handleSubmit}>
-                Topup
+                {trans("actionBtn")}
               </Button>
             </div>
           </div>

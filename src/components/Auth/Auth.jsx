@@ -17,9 +17,12 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/userSlice";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 
 export default function Auth({ closeModal }) {
+  const signUpTrans = useTranslations("SignUp");
+  const loginTrans = useTranslations("Login");
+  
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -140,10 +143,10 @@ export default function Auth({ closeModal }) {
         </div>
         <CardHeader>
           <CardTitle className="text-3xl md:text-4xl text-center font-semibold">
-            {isLogin ? "Login" : "Sign Up"}
+            {isLogin ? loginTrans("title") : signUpTrans("title")}
           </CardTitle>
           <CardDescription className="text-center  text-sm md:text-base">
-            {isLogin ? "Enter your credentials" : "Create a new account"}
+            {isLogin ? loginTrans("p") : signUpTrans("p")}
           </CardDescription>
           <CardDescription className=" text-[12px] ">
             {errors?.general && (
@@ -160,21 +163,21 @@ export default function Auth({ closeModal }) {
               variant="outline"
             >
               {isLoading
-                ? "Please wait..."
+                ? signUpTrans("btnLoading")
                 : isLogin
-                ? "Login with Google"
-                : "Sign Up with Google"}
+                ? loginTrans("withGoogleBtn")
+                : signUpTrans("withGoogleBtn")}
             </Button>
-            <p className=" text-gray-700 text- text-center my-3">OR</p>
+            <p className=" text-gray-700 text- text-center my-3">{signUpTrans("or")}</p>
           </div>
           <form onSubmit={handleSubmit} className=" text-sm md:text-base">
             {!isLogin && (
               <div className="grid w-full items-center gap-4 mb-4">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">{signUpTrans("inputNameLabel")}</Label>
                 <Input
                   type="text"
                   id="name"
-                  placeholder="Enter your name"
+                  placeholder={signUpTrans("inputNamePlaceholder")}
                   value={formData.name}
                   onChange={handleInputChange}
                 />
@@ -184,11 +187,11 @@ export default function Auth({ closeModal }) {
               </div>
             )}
             <div className="grid w-full items-center gap-4 mb-4">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{signUpTrans("inputEmailLabel")}</Label>
               <Input
                 type="email"
                 id="email"
-                placeholder="Enter your email"
+                placeholder={signUpTrans("inputEmailPlaceholder")}
                 value={formData.email}
                 onChange={handleInputChange}
               />
@@ -197,11 +200,11 @@ export default function Auth({ closeModal }) {
               )}
             </div>
             <div className="grid w-full items-center gap-4 mb-4">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{signUpTrans("inputPasswordLabel")}</Label>
               <Input
                 type="password"
                 id="password"
-                placeholder="Enter your password"
+                placeholder={signUpTrans("inputPasswordPlaceholder")}
                 value={formData.password}
                 onChange={handleInputChange}
               />
@@ -214,19 +217,20 @@ export default function Auth({ closeModal }) {
               className="w-full disabled:cursor-not-allowed"
               type="submit"
             >
-              {isLoading ? "Please wait..." : isLogin ? "Login" : "Sign Up"}
+              {isLoading ? signUpTrans("btnLoading") : isLogin ? loginTrans("actionBtn") : signUpTrans("actionBtn")}
             </Button>
           </form>
         </CardContent>
         <CardFooter>
-          <p className="text-sm text-center w-full">
-            {isLogin ? "Don't have an account? " : "Already have an account? "}
+          <p className="text-sm text-center w-full ">
+            {isLogin ? loginTrans("question") : signUpTrans("question")}
             <Button
               variant="link"
-              className="p-0"
+
+              className="p-0 ml-1"
               onClick={() => setIsLogin(!isLogin)}
-            >
-              {isLogin ? "Sign up" : "Login"}
+            >{" "}
+              {isLogin ? signUpTrans("actionBtn") : loginTrans("actionBtn")}
             </Button>
           </p>
         </CardFooter>

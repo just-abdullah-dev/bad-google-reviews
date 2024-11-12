@@ -8,8 +8,9 @@ import { setUser } from "@/store/userSlice";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { updateUserBalance } from "@/actions/balance/updateUserBalance";
+import { redirect } from "@/i18n/routing";
 
-export default function StripePaymentForm({ goBack, amount }) {
+export default function StripePaymentForm({ goBack, amount, trans }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const user = useSelector((state) => state.user);
@@ -85,7 +86,7 @@ export default function StripePaymentForm({ goBack, amount }) {
         className="absolute top-[-48px] cursor-pointer flex items-center hover:translate-x-[-12px] duration-500 "
         onClick={goBack}
       >
-        <ArrowBigLeftIcon strokeWidth={1} /> <p>Go Back</p>
+        <ArrowBigLeftIcon strokeWidth={1} /> <p>{trans("goBackBtn")}</p>
       </div>
       <div className="relative">
         <form onSubmit={onSubmit} className=" grid gap-6">
@@ -96,7 +97,7 @@ export default function StripePaymentForm({ goBack, amount }) {
             className="w-full disabled:cursor-not-allowed"
             type="submit"
           >
-            {loading ? "Please wait..." : "Pay"}
+            {loading ? trans("btnLoading") : trans("payBtn")}
           </Button>
         </form>
       </div>
@@ -105,7 +106,7 @@ export default function StripePaymentForm({ goBack, amount }) {
     <PaymentMessage
       isOpen={true}
       onClose={() => {
-        router.push("/");
+        redirect("/");
         goBack(); // go back to topup page
       }}
       paymentStatus={paymentMessage?.status} // 'COMPLETED' | 'error'

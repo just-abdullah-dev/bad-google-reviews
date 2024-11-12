@@ -3,10 +3,9 @@ import { format } from "date-fns";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
-const UserOrders = ({ userId }) => {
+const UserOrders = ({ userId, trans }) => {
   const [userOrders, setUserOrders] = useState("loading");
-  console.log(userOrders);
-  
+
   useEffect(() => {
     const main = async () => {
       const requestOptions = {
@@ -26,12 +25,12 @@ const UserOrders = ({ userId }) => {
     }
   }, []);
 
-  if (userOrders === "loading") {
+  if (userOrders === "loading" || userId === ""){
     return <LoadingScreen />;
   } else if (userOrders?.data?.total == 0) {
     return (
       <div className="w-full h-full grid place-items-center">
-        <p className="text-red-600">No order history found.</p>
+        <p className="text-red-600">{trans("errorMsg")}</p>
       </div>
     );
   }
@@ -45,25 +44,25 @@ const UserOrders = ({ userId }) => {
           <thead>
             <tr className="bg-gray-100 text-left border-b border-gray-400">
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                Date and Time
+                {trans("th1")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                Order ID
+                {trans("th2")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                No of Reviews
+                {trans("th3")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                Google Map Links
+                {trans("th4")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                Status
+                {trans("th5")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                Total Cost
+                {trans("th6")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                Charged Amount
+                {trans("th7")}
               </th>
             </tr>
           </thead>
@@ -84,7 +83,9 @@ const UserOrders = ({ userId }) => {
                 <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {formatDate(item?.$createdAt)}
                 </td>
-                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">{item.$id}</td>
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
+                  {item.$id}
+                </td>
                 <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {item?.noOfReviews}
                 </td>
@@ -103,8 +104,9 @@ const UserOrders = ({ userId }) => {
                     .split("-")
                     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(" ")}
-                    {item?.status === "partially-fulfilled" ?
-                    ` (${item?.deletedNoOfReviews})`:""}
+                  {item?.status === "partially-fulfilled"
+                    ? ` (${item?.deletedNoOfReviews})`
+                    : ""}
                 </td>
                 <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {item?.totalCost}

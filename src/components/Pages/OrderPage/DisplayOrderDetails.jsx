@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { deductUserBalance } from "@/actions/balance/deductUserBalance";
 import { revalidateTagFunc } from "@/services/util";
+import { useTranslations } from "next-intl";
 
 export default function DisplayOrderDetails({
   isOpen,
@@ -18,6 +19,8 @@ export default function DisplayOrderDetails({
   onUpdate,
   order,
 }) {
+  const trans = useTranslations("OrderDetails");
+
   // Array of possible statuses
   const statuses = [
     "pending",
@@ -97,7 +100,7 @@ export default function DisplayOrderDetails({
       <DialogContent className="sm:max-w-[600px] grid place-items-center">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">
-            Order Details
+            {trans("title")}
           </DialogTitle>
           <DialogDescription>
             {isError && <span className=" text-red-500">{isError}</span>}
@@ -106,10 +109,10 @@ export default function DisplayOrderDetails({
         <div className=" w-full md:w-[400px] text-sm ">
           <div className=" grid gap-3">
             <p className=" font-medium">
-              Order ID: <span className="text-black">{order?.$id}</span>
+              {trans("p1")}: <span className="text-black">{order?.$id}</span>
             </p>
             <p className=" font-medium ">
-              Google Map Link:{" "}
+              {trans("p2")}:{" "}
               <span className="text-blue-500">
                 <a
                   href={order.googleMapLink}
@@ -122,18 +125,18 @@ export default function DisplayOrderDetails({
               </span>
             </p>
             <p className=" font-medium">
-              No Of Reviews:{" "}
+              {trans("p4")}:{" "}
               <span className="text-black">{order?.noOfReviews}</span>
             </p>
 
             <p className=" font-medium">
-              Total Cost:{" "}
+              {trans("p5")}:{" "}
               <span className="text-black">
                 {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} {order.totalCost}
               </span>
             </p>
             <p className=" font-medium">
-              Final Cost:{" "}
+              {trans("p6")}:{" "}
               <span className="text-black">
                 {order.finalCost !== null
                   ? `${process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} ${
@@ -149,7 +152,7 @@ export default function DisplayOrderDetails({
             </p>
             {order?.reviewSelectionOpt === "specific" ? (
               <p className=" font-medium">
-                Reviews Links:{" "}
+                {trans("p3")}:{" "}
                 <span className="text-black">{order?.reviewLinks}</span>
               </p>
             ) : (
@@ -158,7 +161,7 @@ export default function DisplayOrderDetails({
                 className=" border border-black w-[65%]"
                 variant={"default"}
               >
-                Delete All {order?.reviewSelectionOpt} Star Reviews
+                {trans("btn1")} {order?.reviewSelectionOpt} {trans("btn2")}
               </Button>
             )}
             <td className=" font-medium text-black">
@@ -204,7 +207,7 @@ export default function DisplayOrderDetails({
                   order.status === "unfulfilled" ? (
                     <span className="text-black font-medium">
                       {" "}
-                      Deleted Number of Reviews: {order?.deletedNoOfReviews}
+                      {trans("deletedNoOfReviews")}: {order?.deletedNoOfReviews}
                     </span>
                   ) : (
                     <select
@@ -216,7 +219,7 @@ export default function DisplayOrderDetails({
                       }}
                     >
                       <option value="" disabled>
-                        Select number of deleted reviews
+                        {trans("selectDeletedNoOfReviews")}
                       </option>
                       {Array.from(
                         { length: order.noOfReviews },
@@ -246,14 +249,14 @@ export default function DisplayOrderDetails({
         ) : (
           <div className="mt-6 flex w-full md:w-[400px] justify-between items-center">
             <Button disabled={isLoading} onClick={handleClose}>
-              Cancel
+              {trans("cancelBtn")}
             </Button>
             <Button
               disabled={isLoading}
               className=" bg-blue-600 hover:bg-blue-500"
               onClick={handleUpdate}
             >
-              {isLoading ? "Please wait..." : "Update"}
+              {isLoading ? trans("btnLoading") : trans("updateBtn")}
             </Button>
           </div>
         )}

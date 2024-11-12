@@ -5,12 +5,11 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PaymentMessage from "./PaymentMessage";
 import { setUser } from "@/store/userSlice";
-import { useRouter } from "next/navigation";
 import { updateUserBalance } from "@/actions/balance/updateUserBalance";
+import { redirect } from "@/i18n/routing";
 
-export default function PayPal({ goBack, amount }) {
+export default function PayPal({ goBack, amount, trans }) {
   const dispatch = useDispatch();
-  const router = useRouter();
   const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
 
@@ -31,7 +30,7 @@ export default function PayPal({ goBack, amount }) {
         className="absolute -top-12 cursor-pointer flex items-center hover:translate-x-[-12px] duration-500 "
         onClick={goBack}
       >
-        <ArrowBigLeftIcon strokeWidth={1} /> <p>Go Back</p>
+        <ArrowBigLeftIcon strokeWidth={1} /> <p>{trans("goBackBtn")}</p>
       </div>
       <div className="relative">
         <PayPalScriptProvider options={initialOptions}>
@@ -161,7 +160,7 @@ export default function PayPal({ goBack, amount }) {
     <PaymentMessage
       isOpen={true}
       onClose={() => {
-        router.push("/");
+        redirect("/");
         goBack(); // go back to topup page
       }}
       paymentStatus={paymentMessage?.status} // 'COMPLETED' | 'error'

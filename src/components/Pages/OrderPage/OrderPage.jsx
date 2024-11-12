@@ -4,16 +4,18 @@ import { Input } from "@/components/ui/input";
 import React, { useEffect, useState } from "react";
 import UserOrders from "./UserOrders";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import AdminOrders from "./AdminOrders";
 import LoadingScreen from "@/components/ui/LoadingScreen";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
 import { setUser } from "@/store/userSlice";
+import { useTranslations } from "next-intl";
+import { redirect } from "@/i18n/routing";
 
 export default function OrderPage({ isAdmin = false }) {
+  const trans = useTranslations("OrdersPage");
+
   const user = useSelector((state) => state.user);
-  const router = useRouter();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -23,12 +25,14 @@ export default function OrderPage({ isAdmin = false }) {
       try {
         const data = await getUserWithBalance();
         dispatch(setUser(data));
+        console.log(data);
+
         if (data?.isAdmin) {
-          router.push("/");
+          redirect("/");
         }
       } catch (error) {
         toast.error("Kindly login first!");
-        router.push("/");
+        redirect("/");
       }
       setIsLoading(false);
     };
@@ -36,8 +40,8 @@ export default function OrderPage({ isAdmin = false }) {
       main();
     } else {
       if (user?.isAdmin && !isAdmin) {
-        router.push("/");
-      }else{
+        redirect("/");
+      } else {
         setIsLoading(false);
       }
     }
@@ -51,7 +55,7 @@ export default function OrderPage({ isAdmin = false }) {
         <div className=" w-full py-6 lg:w-[95%] xl:w-[90%] 2xl:w-[85%]">
           <div className=" flex flex-col md:flex-row md:items-center gap-4 justify-between px-4 md:p-0">
             <h1 className="font-semibold text-3xl md:text-4xl">
-              Orders History
+              {trans("title")}
             </h1>
             <Input
               placeholder="Search..."
@@ -59,7 +63,11 @@ export default function OrderPage({ isAdmin = false }) {
               type="text"
             />
           </div>
-          {isAdmin ? <AdminOrders /> : <UserOrders userId={user?.id} />}
+          {isAdmin ? (
+            <AdminOrders trans={trans} />
+          ) : (
+            <UserOrders trans={trans} userId={user?.id} />
+          )}
         </div>
       </div>
     </Layout>

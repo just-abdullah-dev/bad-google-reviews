@@ -6,11 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import { ArrowLeftCircle } from "lucide-react";
 import ConfirmOrder from "./ConfirmOrder";
-export default function OrderForm() {
-  const router = useRouter();
+import { redirect } from "@/i18n/routing";
+export default function OrderForm({trans}) {
   const user = useSelector((state) => state.user);
 
   const [confirmOrder, setConfirmOrder] = useState(false);
@@ -72,7 +71,7 @@ export default function OrderForm() {
           );
         }
         toast("Top up first to place order.");
-        router.push("/topup");
+        redirect("/topup");
       }
     } else {
       setErrors({ reviewSelectionOpt: "Select one option please." });
@@ -98,7 +97,7 @@ export default function OrderForm() {
       }}
       onConfirm={async () => {
         toast.success("Your order has been placed.");
-        router.push("/orders");
+        redirect("/orders");
       }}
       data={formData}
     />
@@ -114,7 +113,7 @@ export default function OrderForm() {
               step === 1 ? " hidden " : " block "
             } absolute top-1 cursor-pointer left-[-24px] lg:left-0`}
           />
-          Charged only after deletion
+          {trans("formHeading")}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -122,12 +121,12 @@ export default function OrderForm() {
           {/* Step 1: Google Map Link Input */}
           {step === 1 && (
             <div className="grid w-full items-center gap-4 mb-4">
-              <Label htmlFor="googleMapLink">Google Map Link</Label>
+              <Label htmlFor="googleMapLink">{trans("inputGoogleMapLabel")}</Label>
               <Input
                 type="text"
                 className="bg-white"
                 id="googleMapLink"
-                placeholder="Enter your Google Map Link"
+                placeholder={trans("inputGoogleMapPlaceholder")}
                 value={formData.googleMapLink}
                 onChange={handleInputChange}
               />
@@ -135,7 +134,7 @@ export default function OrderForm() {
                 <p className="text-red-500 text-sm">{errors?.googleMapLink}</p>
               )}
               <Button onClick={handleNextStep} className="w-full">
-                Proceed
+              {trans("form1ActionBtn")}
               </Button>
             </div>
           )}
@@ -163,7 +162,7 @@ export default function OrderForm() {
                       setFormData({ ...formData, reviewSelectionOpt: "1" })
                     }
                   >
-                    Delete All 1 Star Reviews
+                     {trans("btn1")}
                   </Button>
                   <Button
                     type="button"
@@ -177,7 +176,7 @@ export default function OrderForm() {
                       setFormData({ ...formData, reviewSelectionOpt: "1-2" })
                     }
                   >
-                    Delete All 1-2 Star Reviews
+                    {trans("btn2")}
                   </Button>
                   <Button
                     type="button"
@@ -191,7 +190,7 @@ export default function OrderForm() {
                       setFormData({ ...formData, reviewSelectionOpt: "1-3" })
                     }
                   >
-                    Delete All 1-3 Star Reviews
+                    {trans("btn3")}
                   </Button>
                   <Button
                     type="button"
@@ -208,7 +207,7 @@ export default function OrderForm() {
                       })
                     }
                   >
-                    Specific Reviews
+                    {trans("btn4")}
                   </Button>
                 </div>
               </div>
@@ -217,10 +216,10 @@ export default function OrderForm() {
               <div className="grid w-full items-center gap-4 mb-4">
                 {formData?.reviewSelectionOpt !== "" && (
                   <Label htmlFor="noOfReviews">
-                    No Of Reviews{" "}
+                    {trans("inputNoOfReviewsLabel")}{" "}
                     <span className="text-gray-600">
                       ({process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}{" "}
-                      {process.env.NEXT_PUBLIC_PRICE_PER_REVIEW} per/review)
+                      {process.env.NEXT_PUBLIC_PRICE_PER_REVIEW} {trans("inputNoOfReviewsLabel2")})
                     </span>
                   </Label>
                 )}
@@ -231,9 +230,6 @@ export default function OrderForm() {
                     value={formData.noOfReviews}
                     onChange={handleInputChange}
                   >
-                    <option value="" disabled>
-                      Select number of reviews
-                    </option>
                     {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
                       <option key={num} value={num}>
                         {num}
@@ -255,7 +251,7 @@ export default function OrderForm() {
                 <div className="grid w-full items-center gap-4 mb-4">
                   <div>
                     <Label htmlFor="specificReviewLinks">
-                      Paste Review Links
+                    {trans("inputReviewsLinksLabel")}
                     </Label>
                     {errors?.specificReviewLinks && (
                       <p className="text-red-500 text-sm">
@@ -266,7 +262,7 @@ export default function OrderForm() {
                   <textarea
                     id="specificReviewLinks"
                     className="bg-white border border-gray-300 rounded-md p-2"
-                    placeholder="Enter review links separated by commas"
+                    placeholder={trans("inputReviewsLinksPlaceholder")}
                     value={formData.specificReviewLinks}
                     onChange={handleInputChange}
                   />
@@ -274,7 +270,7 @@ export default function OrderForm() {
               )}
               {/* Delete Reviews Button */}
               <Button className="w-full" onClick={handleSubmit}>
-                Delete Reviews
+                {trans("form2ActionBtn")}
               </Button>
             </>
           )}

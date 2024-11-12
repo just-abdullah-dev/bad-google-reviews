@@ -13,8 +13,11 @@ import { updateUserBalance } from "@/actions/balance/updateUserBalance";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/store/userSlice";
 import { revalidateTagFunc } from "@/services/util";
+import { useTranslations } from "next-intl";
 
 export default function ConfirmOrder({ isOpen, onClose, onConfirm, data }) {
+  const trans = useTranslations("ComfirmOrder");
+
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -71,20 +74,20 @@ export default function ConfirmOrder({ isOpen, onClose, onConfirm, data }) {
       <DialogContent className="sm:max-w-[600px] grid place-items-center">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">
-            Confirm Order
+            {trans("title")}
           </DialogTitle>
         </DialogHeader>
         <div className=" w-full md:w-[400px] text-sm ">
           <div className=" grid gap-3">
             <ShoppingBag className="w-14 h-14 mx-auto text-blue-600" />
             <p className=" font-medium ">
-              Google Map Link:{" "}
+            {trans("p1")}:{" "}
               <span className="text-black">{data?.googleMapLink}</span>
             </p>
 
             {data?.reviewSelectionOpt === "specific" ? (
               <p className=" font-medium">
-                Specific Reviews Links:{" "}
+                {trans("p2")}:{" "}
                 <span className="text-black">{data?.specificReviewLinks}</span>
               </p>
             ) : (
@@ -97,12 +100,12 @@ export default function ConfirmOrder({ isOpen, onClose, onConfirm, data }) {
               </Button>
             )}
             <p className=" font-medium">
-              No Of Reviews:{" "}
+            {trans("p3")}:{" "}
               <span className="text-black">{data?.noOfReviews}</span>
             </p>
 
             <p className=" font-medium">
-              Total Amount:{" "}
+            {trans("p4")}:{" "}
               <span className="text-black">
                 {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}{" "}
                 {totalAmount.toFixed(2)}
@@ -112,14 +115,14 @@ export default function ConfirmOrder({ isOpen, onClose, onConfirm, data }) {
         </div>
         <div className="mt-6 flex w-full md:w-[400px] justify-between items-center">
           <Button disabled={isLoading} onClick={handleClose}>
-            Cancel
+          {trans("cancelBtn")}
           </Button>
           <Button
             disabled={isLoading}
             className=" bg-blue-600 hover:bg-blue-500"
             onClick={handleConfirm}
           >
-            {isLoading ? "Please wait..." : "Confirm"}
+            {isLoading ? trans("btnLoading") : trans("confirmBtn")}
           </Button>
         </div>
       </DialogContent>

@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 import { Menu, X, User2, ChevronDown } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "@/store/userSlice";
 import { account } from "@/lib/app_write_client";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
+import LangSwitch from "./LangSwitch";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,6 +17,7 @@ export default function Header() {
     await account.deleteSession("current");
     window.location.reload();
   };
+  const trans = useTranslations("Header");
   return (
     <header
       className={`${
@@ -36,46 +39,49 @@ export default function Header() {
               href="/"
               className="hover:scale-[1.1] duration-500 transition-all"
             >
-              Home
+              {trans("nav1")}
             </Link>
             <Link
               href="/topup"
               className="hover:scale-[1.1] duration-500 transition-all"
             >
-              Topup
+              {trans("nav2")}
             </Link>
             <Link
               href="/orders"
               className="hover:scale-[1.1] duration-500 transition-all"
             >
-              Orders
+              {trans("nav3")}
             </Link>
           </nav>
         )}
-
-        {/* Right Side Avatar and Balance */}
-        <div className="hidden md:flex items-center space-x-4 relative">
-        {!user?.isAdmin &&
-          <span className="font-semibold">
-            {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}{" "}
-            {Number(user.balance).toFixed(2)}
-          </span>}
-          <div className="flex items-center gap-2 cursor-pointer group">
-            <User2
-              strokeWidth={1.5}
-              className="w-8 h-8 border-[2px] rounded-full border-black"
-            />
-            <ChevronDown />
-            <div className=" group-hover:opacity-100 opacity-0 duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] right-0">
-              <p className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer">
-                Profile
-              </p>
-              <p
-                onClick={logout}
-                className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer text-red-600"
-              >
-                Logout
-              </p>
+        {/* Right Side for lang and Avatar, Balance */}
+        <div className=" flex items-center gap-6">
+          <LangSwitch />
+          <div className="hidden md:flex items-center space-x-4 relative">
+            {!user?.isAdmin && (
+              <span className="font-semibold">
+                {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}{" "}
+                {Number(user.balance).toFixed(2)}
+              </span>
+            )}
+            <div className="flex items-center gap-2 cursor-pointer group">
+              <User2
+                strokeWidth={1.5}
+                className="w-8 h-8 border-[2px] rounded-full border-black"
+              />
+              <ChevronDown />
+              <div className=" group-hover:opacity-100 opacity-0 duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] right-0">
+                <p className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer">
+                  {trans("profile")}
+                </p>
+                <p
+                  onClick={logout}
+                  className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer text-red-600"
+                >
+                  {trans("logout")}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -98,11 +104,12 @@ export default function Header() {
         }`}
       >
         <div className="flex justify-end items-center space-x-4 text-lg">
-        {!user?.isAdmin &&
-          <span className="font-semibold">
-            {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}{" "}
-            {Number(user.balance).toFixed(2)}
-          </span>}
+          {!user?.isAdmin && (
+            <span className="font-semibold">
+              {process.env.NEXT_PUBLIC_CURRENCY_SYMBOL}{" "}
+              {Number(user.balance).toFixed(2)}
+            </span>
+          )}
           <div className="flex items-center gap-2 cursor-pointer group">
             <User2
               strokeWidth={1.5}
@@ -111,38 +118,39 @@ export default function Header() {
             <ChevronDown />
             <div className=" group-hover:opacity-100 opacity-0 duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[55px] right-[16px]">
               <p className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer">
-                Profile
+                {trans("profile")}
               </p>
               <p
                 onClick={logout}
                 className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer text-red-600"
               >
-                Logout
+                {trans("logout")}
               </p>
             </div>
           </div>
         </div>
-        {!user?.isAdmin &&
-        <nav className=" p-4 space-y-4 flex flex-col text-3xl ">
-          <Link
-            href="/"
-            className="hover:translate-x-6 w-fit duration-700 transition-all"
-          >
-            Home
-          </Link>
-          <Link
-            href="/topup"
-            className="hover:translate-x-6 w-fit duration-700 transition-all"
-          >
-            Topup
-          </Link>
-          <Link
-            href="/orders"
-            className="hover:translate-x-6 w-fit duration-700 transition-all"
-          >
-            Orders
-          </Link>
-        </nav>}
+        {!user?.isAdmin && (
+          <nav className=" p-4 space-y-4 flex flex-col text-3xl ">
+            <Link
+              href="/"
+              className="hover:translate-x-6 w-fit duration-700 transition-all"
+            >
+              {trans("nav1")}
+            </Link>
+            <Link
+              href="/topup"
+              className="hover:translate-x-6 w-fit duration-700 transition-all"
+            >
+              {trans("nav2")}
+            </Link>
+            <Link
+              href="/orders"
+              className="hover:translate-x-6 w-fit duration-700 transition-all"
+            >
+              {trans("nav3")}
+            </Link>
+          </nav>
+        )}
       </div>
     </header>
   );

@@ -2,13 +2,17 @@
 import React, { useState } from "react";
 import GradientBG from "./GradientBG";
 import { Button } from "../../ui/button";
-import Link from "next/link";
 import Auth from "../../Auth/Auth";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
+import LangSwitch from "@/components/Layout/Header/LangSwitch";
 
 export default function LandingPage() {
   const [isInterested, setIsInterested] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const trans = useTranslations("LandingPage");
+
   return (
     <div className="h-screen relative overflow-hidden">
       <div
@@ -35,11 +39,13 @@ export default function LandingPage() {
           " h-full w-full overflow-hidden relative grid place-items-center"
         }
       >
-        <div className=" absolute top-0 left-0 py-4 px-8">
+        <div className=" absolute top-0 left-0 py-4 px-24 flex items-center justify-between w-full">
           <Link href={"/"} className=" text-lg font-semibold">
             Brand Name
           </Link>
+          <LangSwitch />
         </div>
+
         <div className="grid gap-4 mx-auto px-4">
           <div className="flex items-center justify-center w-full relative">
             {!imageLoaded && (
@@ -58,18 +64,17 @@ export default function LandingPage() {
             />
           </div>
           <h1 className=" text-[40px] sm:text-6xl md:text-8xl font-[600] tracking-tighter leading-tight text-center">
-            Bad <span className="text-[#4286f5]">G</span>
+            {trans("title1")} <span className="text-[#4286f5]">G</span>
             <span className="text-[#dc4437]">o</span>
             <span className="text-[#f5b400]">o</span>
             <span className="text-[#4286f5]">g</span>
             <span className="text-[#109d58]">l</span>
-            <span className="text-[#dc4437]">e</span> Review?
+            <span className="text-[#dc4437]">e</span> {trans("title2")}
           </h1>
           <p className=" text-sm md:text-base text-center font-[500]">
-            Not anymore!
+            {trans("p1")}
             <br />
-            We use our expertise to get your bad reviews removed, so you can
-            develop trust among your customers
+            {trans("p2")}
           </p>
           <div className=" flex items-center justify-center w-full ">
             <Button
@@ -78,7 +83,7 @@ export default function LandingPage() {
               }}
               className={""}
             >
-              I&apos;m interested!
+              {trans("actionBtn")}
             </Button>
           </div>
         </div>

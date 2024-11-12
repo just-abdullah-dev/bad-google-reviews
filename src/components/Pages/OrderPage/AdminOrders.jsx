@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import DisplayOrderDetails from "./DisplayOrderDetails";
 import toast from "react-hot-toast";
 
-const AdminOrders = () => {
+const AdminOrders = ({ trans }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState("");
   const [orders, setOrders] = useState([]);
@@ -48,7 +48,7 @@ const AdminOrders = () => {
   } else if (orders.length <= 0) {
     return (
       <div className="w-full h-full grid place-items-center">
-        <p className="text-red-600">No order history found.</p>
+        <p className="text-red-600">{trans("errorMsg")}</p>
       </div>
     );
   }
@@ -76,22 +76,22 @@ const AdminOrders = () => {
           <thead>
             <tr className="bg-gray-100 text-left border-b border-gray-400">
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                Date/Time
+                {trans("th1")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                Order ID
+                {trans("th2")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                No of Reviews
+                {trans("th3")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                Status
+                {trans("th5")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                Total Cost
+                {trans("th6")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
-                Final Cost
+                {trans("th7")}
               </th>
             </tr>
           </thead>
@@ -102,7 +102,7 @@ const AdminOrders = () => {
                 className={`${
                   order.status === "fulfilled"
                     ? " bg-green-200 "
-                    :order.status === "partially-fulfilled"
+                    : order.status === "partially-fulfilled"
                     ? " bg-green-100 "
                     : order.status === "unfulfilled"
                     ? " bg-red-200 "
@@ -115,7 +115,9 @@ const AdminOrders = () => {
                 <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {formatDate(order?.$createdAt)}
                 </td>
-                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">{order.$id}</td>
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
+                  {order.$id}
+                </td>
                 <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {order.noOfReviews}
                 </td>
