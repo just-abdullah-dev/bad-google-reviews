@@ -4,6 +4,9 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 const UserOrders = ({ userId, trans }) => {
+  if (userId === "") {
+    return;
+  }
   const [userOrders, setUserOrders] = useState("loading");
 
   useEffect(() => {
@@ -25,7 +28,7 @@ const UserOrders = ({ userId, trans }) => {
     }
   }, []);
 
-  if (userOrders === "loading" || userId === ""){
+  if (userOrders === "loading") {
     return <LoadingScreen />;
   } else if (userOrders?.data?.total == 0) {
     return (
