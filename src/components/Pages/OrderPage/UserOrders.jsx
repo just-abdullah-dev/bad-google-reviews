@@ -5,10 +5,6 @@ import React, { useState, useEffect } from "react";
 
 const UserOrders = ({ userId, trans }) => {
   const [userOrders, setUserOrders] = useState("loading");
-  if (userId === "") {
-    return;
-  }
-
   useEffect(() => {
     const main = async () => {
       const requestOptions = {
@@ -27,6 +23,10 @@ const UserOrders = ({ userId, trans }) => {
       main();
     }
   }, []);
+
+  if (userId === "") {
+    return;
+  }
 
   if (userOrders === "loading") {
     return <LoadingScreen />;
