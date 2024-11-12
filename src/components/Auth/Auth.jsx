@@ -17,12 +17,14 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/userSlice";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { host } from "@/config";
 
 export default function Auth({ closeModal }) {
   const signUpTrans = useTranslations("SignUp");
   const loginTrans = useTranslations("Login");
+
+  const locale = useLocale();
   
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
@@ -125,8 +127,8 @@ export default function Auth({ closeModal }) {
     try {
       account.createOAuth2Session(
         "google",
-        `${host}/success`,
-        `${host}/fail?type=google`
+        `${host}/${locale}/success`,
+        `${host}/${locale}/fail?type=google`
       );
     } catch (error) {
       console.error(error);
