@@ -56,7 +56,7 @@ export default function Header() {
           </nav>
         )}
         {/* Right Side for lang and Avatar, Balance */}
-        <div className=" hidden md:flexflex items-center gap-6">
+        <div className=" hidden md:flex items-center gap-6">
           <LangSwitch />
           <div className="flex items-center space-x-4 relative">
             {!user?.isAdmin && (
