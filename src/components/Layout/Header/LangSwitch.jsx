@@ -4,7 +4,7 @@ import { ChevronDown } from "lucide-react";
 import { useLocale } from "next-intl";
 import React, { useState } from "react";
 
-export default function LangSwitch() {
+export default function LangSwitch({ className=""}) {
   //   const [currentLocale, setCurrentLocale] = useState("en");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,7 +21,7 @@ export default function LangSwitch() {
     );
   };
   return (
-    <div className=" ">
+    <div className={className}>
       <div className="flex items-center gap-2 cursor-pointer relative w-full group">
         <div
           className=" flex items-center gap-1 cursor-pointer font-medium duration-300 transition-all"

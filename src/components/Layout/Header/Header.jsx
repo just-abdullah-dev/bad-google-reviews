@@ -103,6 +103,10 @@ export default function Header() {
           isMenuOpen ? " right-0 " : " right-[-45rem] "
         }`}
       >
+        <div className=" relative w-full">
+          <LangSwitch className=" float-left" />
+        </div>
+
         <div className="flex justify-end items-center space-x-4 text-lg">
           {!user?.isAdmin && (
             <span className="font-semibold">
@@ -151,10 +155,6 @@ export default function Header() {
             </Link>
           </nav>
         )}
-        <div className=" relative">
-          
-        <LangSwitch />
-        </div>
       </div>
     </header>
   );
