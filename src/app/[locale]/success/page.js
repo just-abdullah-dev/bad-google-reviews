@@ -13,6 +13,8 @@ export default function Page() {
   useEffect(() => {
     const main = async () => {
       const user = await account.get();
+      console.log(user);
+      
       const res = await fetch("/api/balance", {
         method: "POST",
         body: JSON.stringify({
@@ -28,6 +30,8 @@ export default function Page() {
       }
 
       const data = await getUserWithBalance();
+      console.log("with balance: ", user);
+      
       dispatch(setUser(data));
       toast.success("Successfully Logged in.");
       window.location.href = "/";

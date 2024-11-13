@@ -12,6 +12,8 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const user = useSelector((state) => state.user);
+  console.log(user);
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
