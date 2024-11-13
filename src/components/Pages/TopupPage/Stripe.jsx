@@ -7,10 +7,10 @@ const stripePromise = loadStripe(
   `${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}`
 );
 
-export default function Stripe({goBack, amount}) {
+export default function Stripe({goBack, amount, trans}) {
   return (
     <Elements stripe={stripePromise}>
-      <StripePaymentForm amount={amount} goBack={goBack} />
+      <StripePaymentForm trans={trans} amount={amount} goBack={goBack} />
     </Elements>
   );
 }

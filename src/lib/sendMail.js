@@ -28,8 +28,9 @@ export async function sendMail(email, subject, message) {
       subject: subject,
       html: `<p>${message}</p>`,
     });
+    console.log(info);
     return { success: checkResponse(info?.response), data: info };
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 }

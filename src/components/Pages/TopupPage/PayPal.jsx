@@ -6,10 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import PaymentMessage from "./PaymentMessage";
 import { setUser } from "@/store/userSlice";
 import { updateUserBalance } from "@/actions/balance/updateUserBalance";
-import { redirect } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
 
 export default function PayPal({ goBack, amount, trans }) {
   const dispatch = useDispatch();
+  const router = useRouter();
   const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
 
@@ -118,7 +119,7 @@ export default function PayPal({ goBack, amount, trans }) {
                   );
                 } else {
                   // (3) Successful transaction -> Show confirmation or thank you message
-                  // Or go to another URL:  actions.redirect('thank_you.html');
+                  // Or go to another URL:  actions.router.push('thank_you.html');
                   const transaction =
                     orderData.purchase_units[0].payments.captures[0];
 
@@ -160,7 +161,7 @@ export default function PayPal({ goBack, amount, trans }) {
     <PaymentMessage
       isOpen={true}
       onClose={() => {
-        redirect("/");
+        router.push("/");
         goBack(); // go back to topup page
       }}
       paymentStatus={paymentMessage?.status} // 'COMPLETED' | 'error'

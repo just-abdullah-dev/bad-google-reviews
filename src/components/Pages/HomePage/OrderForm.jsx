@@ -8,9 +8,11 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { ArrowLeftCircle } from "lucide-react";
 import ConfirmOrder from "./ConfirmOrder";
-import { redirect } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
+
 export default function OrderForm({trans}) {
   const user = useSelector((state) => state.user);
+  const router = useRouter();
 
   const [confirmOrder, setConfirmOrder] = useState(false);
   const [formData, setFormData] = useState({
@@ -71,7 +73,7 @@ export default function OrderForm({trans}) {
           );
         }
         toast("Top up first to place order.");
-        redirect("/topup");
+        router.push("/topup");
       }
     } else {
       setErrors({ reviewSelectionOpt: "Select one option please." });
@@ -97,7 +99,7 @@ export default function OrderForm({trans}) {
       }}
       onConfirm={async () => {
         toast.success("Your order has been placed.");
-        redirect("/orders");
+        router.push("/orders");
       }}
       data={formData}
     />

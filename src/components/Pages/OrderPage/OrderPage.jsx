@@ -10,10 +10,11 @@ import LoadingScreen from "@/components/ui/LoadingScreen";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
 import { setUser } from "@/store/userSlice";
 import { useTranslations } from "next-intl";
-import { redirect } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
 
 export default function OrderPage({ isAdmin = false }) {
   const trans = useTranslations("OrdersPage");
+  const router = useRouter();
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -28,11 +29,11 @@ export default function OrderPage({ isAdmin = false }) {
         console.log(data);
 
         if (data?.isAdmin) {
-          redirect("/");
+          router.push("/");
         }
       } catch (error) {
         toast.error("Kindly login first!");
-        redirect("/");
+        router.push("/");
       }
       setIsLoading(false);
     };
@@ -40,7 +41,7 @@ export default function OrderPage({ isAdmin = false }) {
       main();
     } else {
       if (user?.isAdmin && !isAdmin) {
-        redirect("/");
+        router.push("/");
       } else {
         setIsLoading(false);
       }

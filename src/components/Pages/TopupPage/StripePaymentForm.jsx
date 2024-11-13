@@ -5,10 +5,9 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PaymentMessage from "./PaymentMessage";
 import { setUser } from "@/store/userSlice";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { updateUserBalance } from "@/actions/balance/updateUserBalance";
-import { redirect } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
 
 export default function StripePaymentForm({ goBack, amount, trans }) {
   const dispatch = useDispatch();
@@ -106,7 +105,7 @@ export default function StripePaymentForm({ goBack, amount, trans }) {
     <PaymentMessage
       isOpen={true}
       onClose={() => {
-        redirect("/");
+        router.push("/");
         goBack(); // go back to topup page
       }}
       paymentStatus={paymentMessage?.status} // 'COMPLETED' | 'error'

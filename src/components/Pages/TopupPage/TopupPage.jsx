@@ -13,12 +13,13 @@ import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
 import { setUser } from "@/store/userSlice";
 import LoadingScreen from "@/components/ui/LoadingScreen";
 import { useTranslations } from "next-intl";
-import { redirect } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
 
 export default function TopupPage() {
   const user = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+  const router = useRouter();
   const trans = useTranslations("TopupPage");
 
   useEffect(() => {
@@ -28,13 +29,13 @@ export default function TopupPage() {
         const data = await getUserWithBalance();
         dispatch(setUser(data));
         if (data?.isAdmin) {
-          redirect("/");
+          router.push("/");
         } else {
           setIsLoading(false);
         }
       } catch (error) {
         toast.error("Kindly login first!");
-        redirect("/");
+        router.push("/");
         setIsLoading(false);
       }
     };
@@ -42,7 +43,7 @@ export default function TopupPage() {
       main();
     } else {
       if (user?.isAdmin) {
-        redirect("/");
+        router.push("/");
       } else {
         setIsLoading(false);
       }
