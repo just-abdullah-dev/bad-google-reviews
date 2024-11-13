@@ -125,7 +125,7 @@ async function sendMailToCustomer(data) {
   <br>Hi <b>${data?.fullName}!</b>
   <br><br>Your order id: ${data?.orderId}
   <br><br>${data?.message}
-  <br><br>Best Regards, <br>Your Team
+  <br><br>Best Regards, <br>25 Euro Loeschung
 `;
 
     const result = await sendMail(data?.email, `Update on order!`, message);

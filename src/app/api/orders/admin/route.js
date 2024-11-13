@@ -7,7 +7,6 @@ const db_id = process.env.APPWRITE_DB_ID;
 const collection_id = process.env.APPWRITE_ORDERS_C_ID;
 const support_email = process.env.SUPPORT_EMAIL;
 
-
 const allowedOrigins = [
   "https://bad-google-reviews.vercel.app",
   "http://localhost:3000",
@@ -105,8 +104,7 @@ export async function PUT(req) {
         data
       );
 
-      
-    const user = await ssUsers.get(order.userId);
+      const user = await ssUsers.get(order.userId);
 
       // send mail to user according type of status
       // total type of statuses: pending, unfulfilled, fulfilled, cancelled, submitted-to-google, partially-fulfilled
@@ -211,7 +209,7 @@ async function sendMailToCustomer(data) {
   <br>Hi <b>${data?.fullName}!</b>
   <br><br>Your order id: ${data?.orderId}
   <br><br>${data?.message}
-  <br><br>Best Regards, <br>Your Team
+  <br><br>Best Regards, <br>25 Euro Loeschung
 `;
 
     const result = await sendMail(data?.email, `Update on order!`, message);
