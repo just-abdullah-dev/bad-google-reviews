@@ -12,29 +12,34 @@ export default function Page() {
 
   useEffect(() => {
     const main = async () => {
-      const user = await account.get();
-      console.log(user);
-      
-      const res = await fetch("/api/balance", {
-        method: "POST",
-        body: JSON.stringify({
-          userId: user?.$id,
-        }),
-      });
-      if (res.status !== 409) {
-        const balanceData = await res.json();
-        if (!balanceData?.success) {
-          toast.error(balanceData?.message);
-          return;
-        }
-      }
+      try {
+        const user = await account.get();
+        console.log(user);
 
-      const data = await getUserWithBalance();
-      console.log("with balance: ", user);
-      
-      dispatch(setUser(data));
-      toast.success("Successfully Logged in.");
-      window.location.href = "/";
+        const res = await fetch("/api/balance", {
+          method: "POST",
+          body: JSON.stringify({
+            userId: user?.$id,
+          }),
+        });
+        if (res.status !== 409) {
+          const balanceData = await res.json();
+          if (!balanceData?.success) {
+            toast.error(balanceData?.message);
+            return;
+          }
+        }
+
+        const data = await getUserWithBalance();
+        console.log("with balance: ", user);
+
+        dispatch(setUser(data));
+        toast.success("Successfully Logged in.");
+        window.location.href = "/";
+      } catch (error) {
+        console.log(error);
+        toast.error(error?.message);
+      }
     };
     main();
   }, []);
