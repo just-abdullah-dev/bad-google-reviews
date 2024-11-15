@@ -57,9 +57,9 @@ export default function Auth({ closeModal }) {
     // Clear session storage
     sessionStorage.clear();
     console.log("Session storage cleared");
-    await account.deleteSession("current");
+    // await account.deleteSession("current");
   };
-  
+
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData({

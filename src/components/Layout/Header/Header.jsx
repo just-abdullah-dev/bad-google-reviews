@@ -129,7 +129,7 @@ export default function Header() {
             </span>
           )}
           <div
-            className="flex items-center gap-2 cursor-pointer group"
+            className="flex items-center gap-2 cursor-pointer group relative "
             onClick={() => {
               setIsProfileOpen(!isProfileOpen);
             }}
@@ -146,7 +146,7 @@ export default function Header() {
             <div
               className={` ${
                 isProfileOpen ? "opacity-100" : "opacity-0"
-              } duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] left-0`}
+              } duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] right-0`}
             >
               <p className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer">
                 {trans("profile")}
