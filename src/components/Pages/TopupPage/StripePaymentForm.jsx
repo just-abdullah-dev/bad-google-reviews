@@ -112,7 +112,11 @@ export default function StripePaymentForm({ goBack, amount, trans }) {
       payerName={paymentMessage?.payerName}
       updatedBalance={paymentMessage?.updatedBalance}
       id={paymentMessage?.id}
-      message={paymentMessage?.message} // both success message or error message
+      message={paymentMessage?.message}
+      userName={user?.name}
+      userEmail={user?.email}
+      paymentGateway={"Stripe"}
+      amount={amount}
     />
   );
 }

@@ -12,6 +12,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const logout = async () => {
     dispatch(clearUser());
     await account.deleteSession("current");
@@ -65,13 +66,26 @@ export default function Header() {
                 {Number(user.balance).toFixed(2)}
               </span>
             )}
-            <div className="flex items-center gap-2 cursor-pointer group">
+            <div
+              className="flex items-center gap-2 cursor-pointer group"
+              onClick={() => {
+                setIsProfileOpen(!isProfileOpen);
+              }}
+            >
               <User2
                 strokeWidth={1.5}
                 className="w-8 h-8 border-[2px] rounded-full border-black"
               />
-              <ChevronDown />
-              <div className=" group-hover:opacity-100 opacity-0 duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] right-0">
+              <ChevronDown
+                className={` ${
+                  isProfileOpen ? " top-[2px]" : "top-0"
+                } duration-300 transition-all relative `}
+              />
+              <div
+                className={` ${
+                  isProfileOpen ? "opacity-100" : "opacity-0"
+                } duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] right-[-26px]`}
+              >
                 <p className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer">
                   {trans("profile")}
                 </p>
@@ -114,13 +128,26 @@ export default function Header() {
               {Number(user.balance).toFixed(2)}
             </span>
           )}
-          <div className="flex items-center gap-2 cursor-pointer group">
+          <div
+            className="flex items-center gap-2 cursor-pointer group"
+            onClick={() => {
+              setIsProfileOpen(!isProfileOpen);
+            }}
+          >
             <User2
               strokeWidth={1.5}
               className="w-8 h-8 border-[2px] rounded-full border-black"
             />
-            <ChevronDown />
-            <div className=" group-hover:opacity-100 opacity-0 duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[55px] right-[16px]">
+            <ChevronDown
+              className={` ${
+                isProfileOpen ? " top-[2px]" : "top-0"
+              } duration-300 transition-all relative `}
+            />
+            <div
+              className={` ${
+                isProfileOpen ? "opacity-100" : "opacity-0"
+              } duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] left-0`}
+            >
               <p className=" py-2 pl-6 pr-8 hover:bg-gray-200 duration-300 transition-all cursor-pointer">
                 {trans("profile")}
               </p>

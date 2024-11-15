@@ -36,16 +36,13 @@ export default function LangSwitch({ className=""}) {
             : ""}{" "}
           <ChevronDown
             className={` ${
-              isOpen ? " top-[3px]" : "top-0"
+              isOpen ? " top-[2px]" : "top-0"
             } duration-300 transition-all relative `}
           />
         </div>
-        <div className=" group-hover:opacity-100 opacity-0 duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] left-0">
+        <div className={` ${isOpen ? "opacity-100" : "opacity-0"} duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] left-0`}>
           <p
             onClick={switchLanguage}
-            // onClick={() => {
-            //   setCurrentLocale(currentLocale === "en" ? "de" : "en");
-            // }}
             className=" py-2 px-2 hover:bg-gray-200 duration-300 transition-all cursor-pointer"
           >
             {currentLocale === "en"

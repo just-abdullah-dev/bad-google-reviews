@@ -19,13 +19,14 @@ import { setUser } from "@/store/userSlice";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
 import { useLocale, useTranslations } from "next-intl";
 import { host } from "@/config";
+import Image from "next/image";
 
 export default function Auth({ closeModal }) {
   const signUpTrans = useTranslations("SignUp");
   const loginTrans = useTranslations("Login");
 
   const locale = useLocale();
-  
+
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -165,13 +166,35 @@ export default function Auth({ closeModal }) {
               onClick={handleWithGoogle}
               variant="outline"
             >
-              {isLoading
-                ? signUpTrans("btnLoading")
-                : isLogin
-                ? loginTrans("withGoogleBtn")
-                : signUpTrans("withGoogleBtn")}
+              {isLoading ? (
+                signUpTrans("btnLoading")
+              ) : isLogin ? (
+                <div className="flex items-center gap-2">
+                  <Image
+                    className={`  `}
+                    alt={"google icon"}
+                    width={23}
+                    height={23}
+                    src={"/google.png"}
+                  />
+                  {loginTrans("withGoogleBtn")}
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Image
+                    className={`  `}
+                    alt={"google icon"}
+                    width={23}
+                    height={23}
+                    src={"/google.png"}
+                  />
+                  {signUpTrans("withGoogleBtn")}
+                </div>
+              )}
             </Button>
-            <p className=" text-gray-700 text- text-center my-3">{signUpTrans("or")}</p>
+            <p className=" text-gray-700 text- text-center my-3">
+              {signUpTrans("or")}
+            </p>
           </div>
           <form onSubmit={handleSubmit} className=" text-sm md:text-base">
             {!isLogin && (
@@ -203,7 +226,9 @@ export default function Auth({ closeModal }) {
               )}
             </div>
             <div className="grid w-full items-center gap-4 mb-4">
-              <Label htmlFor="password">{signUpTrans("inputPasswordLabel")}</Label>
+              <Label htmlFor="password">
+                {signUpTrans("inputPasswordLabel")}
+              </Label>
               <Input
                 type="password"
                 id="password"
@@ -220,7 +245,11 @@ export default function Auth({ closeModal }) {
               className="w-full disabled:cursor-not-allowed"
               type="submit"
             >
-              {isLoading ? signUpTrans("btnLoading") : isLogin ? loginTrans("actionBtn") : signUpTrans("actionBtn")}
+              {isLoading
+                ? signUpTrans("btnLoading")
+                : isLogin
+                ? loginTrans("actionBtn")
+                : signUpTrans("actionBtn")}
             </Button>
           </form>
         </CardContent>
@@ -229,10 +258,10 @@ export default function Auth({ closeModal }) {
             {isLogin ? loginTrans("question") : signUpTrans("question")}
             <Button
               variant="link"
-
               className="p-0 ml-1"
               onClick={() => setIsLogin(!isLogin)}
-            >{" "}
+            >
+              {" "}
               {isLogin ? signUpTrans("actionBtn") : loginTrans("actionBtn")}
             </Button>
           </p>

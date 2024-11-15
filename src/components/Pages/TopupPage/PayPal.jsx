@@ -169,6 +169,10 @@ export default function PayPal({ goBack, amount, trans }) {
       updatedBalance={paymentMessage?.updatedBalance}
       id={paymentMessage?.id}
       message={paymentMessage?.message} // both success message or error message
+      userName={user?.name}
+      userEmail={user?.email}
+      paymentGateway={"PayPal"}
+      amount={amount}
     />
   );
 }
