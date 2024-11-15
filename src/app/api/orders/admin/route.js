@@ -9,14 +9,15 @@ const support_email = process.env.SUPPORT_EMAIL;
 
 const allowedOrigins = [
   "https://bad-google-reviews.vercel.app",
-  "https://25euro-loeschung.de/",
-  "https://www.25euro-loeschung.de/",
+  "https://25euro-loeschung.de",
+  "https://www.25euro-loeschung.de",
   "http://localhost:3000",
   "http://127.0.0.1:3000",
 ];
 
 export async function OPTIONS(req) {
   const origin = req.headers.get("origin");
+  console.log("current origin: ", origin);
 
   if (allowedOrigins.includes(origin)) {
     return NextResponse.json(
@@ -68,6 +69,7 @@ export async function PUT(req) {
       );
     }
     const origin = req.headers.get("origin");
+    console.log("current origin: ", origin);
 
     if (allowedOrigins.includes(origin)) {
       const body = await req.json();
