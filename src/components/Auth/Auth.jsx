@@ -26,7 +26,6 @@ export default function Auth({ closeModal }) {
   const loginTrans = useTranslations("Login");
 
   const locale = useLocale();
-
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +36,28 @@ export default function Auth({ closeModal }) {
   });
   const [errors, setErrors] = useState({});
 
+  const clearAllCookies = async () => {
+    const cookies = document.cookie.split(";");
+    for (const cookie of cookies) {
+      const [name] = cookie.split("=");
+      document.cookie = `${name.trim()}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${
+        window.location.hostname
+      };`;
+      document.cookie = `${name.trim()}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${
+        window.location.hostname
+      };`;
+    }
+    console.log("First-party cookies cleared");
+
+    // Clear local storage
+    localStorage.clear();
+    console.log("Local storage cleared");
+
+    // Clear session storage
+    sessionStorage.clear();
+    console.log("Session storage cleared");
+    await account.deleteSession("current");
+  };
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData({
@@ -110,10 +131,11 @@ export default function Auth({ closeModal }) {
     setIsLoading(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length === 0) {
+      await clearAllCookies();
       if (isLogin) {
         login();
       } else {
@@ -126,6 +148,7 @@ export default function Auth({ closeModal }) {
 
   const handleWithGoogle = async () => {
     try {
+      await clearAllCookies();
       account.createOAuth2Session(
         "google",
         `${host}/${locale}/success`,
