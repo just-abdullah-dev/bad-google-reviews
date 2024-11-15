@@ -15,7 +15,7 @@ import {
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/store/userSlice";
+import { clearUser, setUser } from "@/store/userSlice";
 import { getUserWithBalance } from "@/actions/balance/getUserWithBalance";
 import { useLocale, useTranslations } from "next-intl";
 import { host } from "@/config";
@@ -37,6 +37,7 @@ export default function Auth({ closeModal }) {
   const [errors, setErrors] = useState({});
 
   const clearAllCookies = async () => {
+    dispatch(clearUser());
     const cookies = document.cookie.split(";");
     for (const cookie of cookies) {
       const [name] = cookie.split("=");
@@ -58,6 +59,7 @@ export default function Auth({ closeModal }) {
     console.log("Session storage cleared");
     await account.deleteSession("current");
   };
+  
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData({
