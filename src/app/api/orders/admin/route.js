@@ -10,6 +10,7 @@ const support_email = process.env.SUPPORT_EMAIL;
 const allowedOrigins = [
   "https://bad-google-reviews.vercel.app",
   "https://25euro-loeschung.de/",
+  "https://www.25euro-loeschung.de/",
   "http://localhost:3000",
   "http://127.0.0.1:3000",
 ];
