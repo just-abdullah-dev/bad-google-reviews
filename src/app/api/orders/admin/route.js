@@ -73,7 +73,7 @@ export async function PUT(req) {
 
     if (allowedOrigins.includes(origin)) {
       const body = await req.json();
-      const { orderId, status, deletedNoOfReviews } = body;
+      const { orderId, status, deletedNoOfReviews, locale } = body;
 
       const orders = await ssDatabase.listDocuments(db_id, collection_id, [
         Query.equal("$id", orderId),
@@ -179,7 +179,75 @@ export async function PUT(req) {
           break;
       }
 
-      await sendMailToCustomer(mailData);
+      if (locale === "de") {
+        switch (status) {
+          case "pending":
+            mailData = {
+              ...mailData,
+              message: `
+                Vielen Dank für Ihre Nachricht. Ihre Anfrage ist derzeit <b>in Bearbeitung</b>. 
+                Wir prüfen sie und werden Sie in Kürze informieren. Bei Fragen kontaktieren Sie uns bitte unter 
+                <a href="mailto:${support_email}">${support_email}</a>.
+              `,
+            };
+            break;
+
+          case "unfulfilled":
+            mailData = {
+              ...mailData,
+              message: `
+                Ihre Anfrage ist derzeit <b>nicht erfüllt</b>. Wir arbeiten aktiv daran und werden Sie benachrichtigen, sobald sie abgeschlossen ist. 
+                Bei Fragen wenden Sie sich bitte an <a href="mailto:${support_email}">${support_email}</a>.
+              `,
+            };
+            break;
+
+          case "fulfilled":
+            mailData = {
+              ...mailData,
+              message: `
+                Gute Nachrichten! Ihre Anfrage wurde <b>erfolgreich erfüllt</b>. 
+                Wenn Sie weitere Fragen haben, erreichen Sie uns gerne unter <a href="mailto:${support_email}">${support_email}</a>.
+              `,
+            };
+            break;
+
+          case "cancelled":
+            mailData = {
+              ...mailData,
+              message: `
+                Ihre Anfrage wurde <b>storniert</b>. Wenn Sie glauben, dass dies ein Fehler war, 
+                kontaktieren Sie uns bitte unter <a href="mailto:${support_email}">${support_email}</a>.
+              `,
+            };
+            break;
+
+          case "submitted-to-google":
+            mailData = {
+              ...mailData,
+              message: `
+                Ihre Anfrage wurde <b>an Google zur weiteren Bearbeitung übermittelt</b>. 
+                Wir werden Sie bald informieren. Bei Fragen erreichen Sie uns unter <a href="mailto:${support_email}">${support_email}</a>.
+              `,
+            };
+            break;
+
+          case "partially-fulfilled":
+            mailData = {
+              ...mailData,
+              message: `
+                Ihre Anfrage wurde <b>teilweise erfüllt</b>. Insgesamt wurden ${deletedNoOfReviews} Bewertungen gelöscht. 
+                Für weitere Unterstützung kontaktieren Sie uns bitte unter <a href="mailto:${support_email}">${support_email}</a>.
+              `,
+            };
+            break;
+
+          default:
+            break;
+        }
+      }
+
+      await sendMailToCustomer(mailData, locale);
       return NextResponse.json(
         {
           success: true,
@@ -207,16 +275,27 @@ export async function PUT(req) {
   }
 }
 
-async function sendMailToCustomer(data) {
+async function sendMailToCustomer(data, locale) {
   try {
     const message = `
   <br>Hi <b>${data?.fullName}!</b>
   <br><br>Your order id: ${data?.orderId}
   <br><br>${data?.message}
-  <br><br>Best Regards, <br>25 Euro Loeschung
+  <br><br>Best Regards, <br>25 Euro Löschung
 `;
+    if (locale === "de") {
+      message = `<br>Hallo <b>${data?.fullName}!</b>
+<br><br>Ihre Bestellnummer: ${data?.orderId}
+<br><br>${data?.message}
+<br><br>Mit freundlichen Grüßen, <br>25 Euro Löschung
+`;
+    }
 
-    const result = await sendMail(data?.email, `Update on order!`, message);
+    const result = await sendMail(
+      data?.email,
+      locale === "de" ? "Aktualisierung zur Bestellung!" : `Update on order!`,
+      message
+    );
     return result;
   } catch (error) {
     console.error(error);

@@ -32,7 +32,7 @@ export default function LangSwitch({ className=""}) {
           {currentLocale === "en"
             ? "English en"
             : currentLocale === "de"
-            ? "German de"
+            ? "Deutsch de"
             : ""}{" "}
           <ChevronDown
             className={` ${
@@ -40,13 +40,13 @@ export default function LangSwitch({ className=""}) {
             } duration-300 transition-all relative `}
           />
         </div>
-        <div className={` ${isOpen ? "opacity-100" : "opacity-0"} duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] left-0`}>
+        <div className={` ${isOpen ? "opacity-100 pointer-events-auto " : "opacity-0 pointer-events-none "} duration-500 transition-all bg-white rounded-xl overflow-hidden absolute top-[40px] left-0`}>
           <p
             onClick={switchLanguage}
             className=" py-2 px-2 hover:bg-gray-200 duration-300 transition-all cursor-pointer"
           >
             {currentLocale === "en"
-              ? "German de"
+              ? "Deutsch de"
               : currentLocale === "de"
               ? "English en"
               : ""}

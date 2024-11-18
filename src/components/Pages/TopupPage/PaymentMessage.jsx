@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 
 // interface PaymentModalProps {
@@ -34,6 +34,7 @@ export default function PaymentMessage({
   paymentGateway,
   amount,
 }) {
+  const locale = useLocale();
   const [open, setOpen] = useState(isOpen);
   const balance = Number(updatedBalance);
 
@@ -55,6 +56,7 @@ export default function PaymentMessage({
             transactionId: id,
             paymentGateway,
             amount,
+            locale,
           }),
         });
 

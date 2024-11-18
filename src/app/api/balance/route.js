@@ -141,7 +141,7 @@ export async function POST(req) {
       ID.unique(),
       {
         userId: userId,
-        balance: 0.0,
+        balance: 25.0,
         reservedAmount: 0.0,
       }
     );

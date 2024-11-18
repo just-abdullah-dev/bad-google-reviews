@@ -26,10 +26,10 @@ export default function Header() {
       } fixed top-0 w-full z-50 duration-700 transition-all h-fit `}
     >
       <div className="container mx-auto flex justify-between items-center py-4 px-8">
-        {/* 25 Euro Loeschung */}
+        {/* 25 Euro Löschung */}
         <div className="text-2xl font-bold">
           <Link href={"/"} className=" text-lg font-semibold">
-            25 Euro Loeschung
+            25 Euro Löschung
           </Link>
         </div>
 

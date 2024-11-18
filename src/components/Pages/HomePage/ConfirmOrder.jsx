@@ -13,10 +13,11 @@ import { updateUserBalance } from "@/actions/balance/updateUserBalance";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/store/userSlice";
 import { revalidateTagFunc } from "@/services/util";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function ConfirmOrder({ isOpen, onClose, onConfirm, data }) {
   const trans = useTranslations("ComfirmOrder");
+  const locale = useLocale();
 
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ export default function ConfirmOrder({ isOpen, onClose, onConfirm, data }) {
         reviewSelectionOpt: data?.reviewSelectionOpt,
         reviewLinks: data?.specificReviewLinks,
         totalCost: totalAmount,
+        locale
       }),
     });
     console.log(await res.json());

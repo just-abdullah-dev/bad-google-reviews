@@ -2,9 +2,9 @@
   "LandingPage": {
     "title1": "Schlechte",
     "title2": "Bewertung?",
-    "p1": "Nicht mehr!",
-    "p2": "Wir nutzen unser Fachwissen, um Ihre schlechten Bewertungen zu entfernen, damit Sie Vertrauen bei Ihren Kunden aufbauen können.",
-    "actionBtn": "Ich bin interessiert!"
+    "p1": "Schluss damit!",
+    "p2": "Unsere erfahrenen Anwälte löschen Ihre schlechten Bewertungen - mit 99% Erfolgsquote und Bearbeitung rund um die Uhr. So gewinnen Sie das Vertrauen Ihrer Kunden zurück.",
+    "actionBtn": "Jetzt Löschung beantragen"
   },
   "SignUp": {
     "title": "Registrieren",
@@ -40,11 +40,11 @@
     "title1": "Wenige",
     "title2": "Schritte",
     "step1Heading": "Guthaben aufladen",
-    "step1Desc": "Fügen Sie Ihrem Konto Guthaben hinzu, um die Kosten für das Entfernen der negativen Bewertung zu decken.",
+    "step1Desc": "Laden Sie Ihr Konto auf, um den Betrag für die Löschung Ihrer negativen Bewertungen zu sichern - Kosten fallen nur bei erfolgreicher Löschung an.",
     "step2Heading": "Details eingeben",
-    "step2Desc": "Geben Sie den Link zur Google Maps-Seite mit den negativen Bewertungen ein und wählen Sie die Anzahl der zu löschenden Bewertungen.",
-    "step3Heading": "Bestellung aufgeben und warten, bis die Bewertung gelöscht ist",
-    "step3Desc": "Sobald Sie eine Bestellung aufgegeben haben, wird unser Team daran arbeiten, die negative Bewertung zu entfernen.",
+    "step2Desc": "Teilen Sie uns den Link zu Ihrer Google Maps-Seite und die Anzahl der Bewertungen mit, die Sie entfernen lassen möchten.",
+    "step3Heading": "Bestellung aufgeben und Erfolg abwarten",
+    "step3Desc": "Nach Ihrer Bestellung übernimmt unser Team die Arbeit. Ihr Konto wird erst belastet, wenn die Bewertung erfolgreich gelöscht wurde.",
     "formHeading": "Nur nach Löschung berechnet",
     "inputGoogleMapLabel": "Google Map Link",
     "inputGoogleMapPlaceholder": "Geben Sie Ihren Google Map Link ein",

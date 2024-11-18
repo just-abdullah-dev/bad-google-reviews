@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { deductUserBalance } from "@/actions/balance/deductUserBalance";
 import { revalidateTagFunc } from "@/services/util";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function DisplayOrderDetails({
   isOpen,
@@ -20,6 +20,7 @@ export default function DisplayOrderDetails({
   order,
 }) {
   const trans = useTranslations("OrderDetails");
+  const locale = useLocale();
 
   // Array of possible statuses
   const statuses = [
@@ -61,6 +62,7 @@ export default function DisplayOrderDetails({
             status === "fulfilled"
               ? `${order.noOfReviews}`
               : `${deletedNoOfReviews}`,
+          locale,
         }),
       });
       if (res.ok) {

@@ -3,7 +3,6 @@ import { sendMail } from "@/lib/sendMail";
 import { NextResponse } from "next/server";
 import { ID, Query } from "node-appwrite";
 
-
 const db_id = process.env.APPWRITE_DB_ID;
 const collection_id = process.env.APPWRITE_ORDERS_C_ID;
 const support_email = process.env.SUPPORT_EMAIL;
@@ -54,13 +53,15 @@ export async function POST(req) {
       reviewSelectionOpt,
       reviewLinks,
       totalCost,
+      locale,
     } = body;
     if (
       !userId ||
       !googleMapLink ||
       !noOfReviews ||
       !reviewSelectionOpt ||
-      !totalCost
+      !totalCost ||
+      !locale
     ) {
       return NextResponse.json(
         {
@@ -85,9 +86,8 @@ export async function POST(req) {
         totalCost: Number(totalCost),
       }
     );
-    
-    const user = await ssUsers.get(userId)
 
+    const user = await ssUsers.get(userId);
     // mail here
     let mailData = {
       fullName: user.name,
@@ -99,7 +99,17 @@ export async function POST(req) {
               contact us at <a href="mailto:${support_email}">${support_email}</a>.
             `,
     };
-    await sendMailToCustomer(mailData);
+    if (locale === "de") {
+      mailData = {
+        ...mailData,
+        message: `Danke für Ihre Nachricht. Ihre Anfrage ist derzeit <b>in Bearbeitung</b>. 
+Wir prüfen sie und werden Sie in Kürze informieren. Bei Fragen kontaktieren Sie uns bitte unter 
+<a href="mailto:${support_email}">${support_email}</a>.
+`,
+      };
+    }
+
+    await sendMailToCustomer(mailData, locale);
     return NextResponse.json(
       {
         success: true,
@@ -119,14 +129,21 @@ export async function POST(req) {
   }
 }
 
-async function sendMailToCustomer(data) {
+async function sendMailToCustomer(data, locale) {
   try {
-    const message = `
+    let message = `
   <br>Hi <b>${data?.fullName}!</b>
   <br><br>Your order id: ${data?.orderId}
   <br><br>${data?.message}
-  <br><br>Best Regards, <br>25 Euro Loeschung
+  <br><br>Best Regards, <br>25 Euro Löschung
 `;
+    if (locale === "de") {
+      message = `<br>Hallo <b>${data?.fullName}!</b>
+<br><br>Ihre Bestellnummer: ${data?.orderId}
+<br><br>${data?.message}
+<br><br>Mit freundlichen Grüßen, <br>25 Euro Löschung
+`;
+    }
 
     const result = await sendMail(data?.email, `Update on order!`, message);
     return result;
