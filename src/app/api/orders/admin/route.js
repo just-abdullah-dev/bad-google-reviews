@@ -277,7 +277,7 @@ export async function PUT(req) {
 
 async function sendMailToCustomer(data, locale) {
   try {
-    const message = `
+    let message = `
   <br>Hi <b>${data?.fullName}!</b>
   <br><br>Your order id: ${data?.orderId}
   <br><br>${data?.message}
