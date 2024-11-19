@@ -5,6 +5,7 @@ import { Query } from "node-appwrite";
 
 const db_id = process.env.APPWRITE_DB_ID;
 const collection_id = process.env.APPWRITE_ORDERS_C_ID;
+
 const support_email = process.env.SUPPORT_EMAIL;
 
 const allowedOrigins = [
@@ -38,12 +39,31 @@ export async function OPTIONS(req) {
 
 export async function GET(req) {
   try {
-    const response = await ssDatabase.listDocuments(db_id, collection_id);
+    // Update each order with user details
+    const enrichOrdersWithUserDetails = async () => {
+      const { documents } = await ssDatabase.listDocuments(
+        db_id,
+        collection_id
+      );
+
+      const enrichedOrders = await Promise.all(
+        documents.map(async (order) => {
+          const user = await ssUsers.get(order.userId);
+          return {
+            ...order,
+            user,
+          };
+        })
+      );
+
+      return enrichedOrders;
+    };
+    const data = await enrichOrdersWithUserDetails();
 
     return NextResponse.json(
       {
         success: true,
-        data: response,
+        data: {documents: data},
       },
       { status: 200 }
     );

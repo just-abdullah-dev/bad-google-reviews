@@ -72,10 +72,11 @@ export default function Header() {
                 setIsProfileOpen(!isProfileOpen);
               }}
             >
-              <User2
+              {/* <User2
                 strokeWidth={1.5}
                 className="w-8 h-8 border-[2px] rounded-full border-black"
-              />
+              /> */}
+              <p className="font-semibold">{user?.name}</p>
               <ChevronDown
                 className={` ${
                   isProfileOpen ? " top-[2px]" : "top-0"
@@ -134,10 +135,11 @@ export default function Header() {
               setIsProfileOpen(!isProfileOpen);
             }}
           >
-            <User2
+            {/* <User2
               strokeWidth={1.5}
               className="w-8 h-8 border-[2px] rounded-full border-black"
-            />
+            /> */}
+            <p className="font-semibold">{user?.name}</p>
             <ChevronDown
               className={` ${
                 isProfileOpen ? " top-[2px]" : "top-0"

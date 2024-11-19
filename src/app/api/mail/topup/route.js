@@ -132,3 +132,5 @@ async function sendMailToCustomer(data, locale) {
     console.error(error);
   }
 }
+
+

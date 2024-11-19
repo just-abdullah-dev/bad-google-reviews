@@ -76,6 +76,9 @@ const AdminOrders = ({ trans }) => {
           <thead>
             <tr className="bg-gray-100 text-left border-b border-gray-400">
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
+                {trans("th0")}
+              </th>
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 {trans("th1")}
               </th>
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
@@ -93,6 +96,9 @@ const AdminOrders = ({ trans }) => {
               <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
                 {trans("th7")}
               </th>
+              <th className="py-3 px-4 font-semibold text-[12px] md:text-sm text-gray-700">
+                {trans("th8")}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -107,13 +113,19 @@ const AdminOrders = ({ trans }) => {
                     : order.status === "unfulfilled"
                     ? " bg-red-200 "
                     : "hover:bg-gray-300 hover:bg-opacity-45 "
-                } border-b border-gray-300   duration-300 cursor-pointer`}
-                onClick={() => {
-                  setSelectedOrder(order);
-                }}
+                } border-b border-gray-300   duration-300`}
+                
               >
                 <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {formatDate(order?.$createdAt)}
+                </td>
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
+                  {order?.user?.name}<br/>(
+                  <a
+                    target="_blank" className="text-blue-500" href={`mailto:${order?.user?.email}`}>
+                    {order?.user?.email}
+                  </a>
+                  )
                 </td>
                 <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
                   {order.$id}
@@ -136,6 +148,14 @@ const AdminOrders = ({ trans }) => {
                   {order.finalCost !== null
                     ? `${process.env.NEXT_PUBLIC_CURRENCY_SYMBOL} ${order.finalCost}`
                     : "N/A"}
+                </td>
+                <td className="py-3 px-4 text-gray-800 text-[12px] md:text-sm">
+                  <p
+                  onClick={() => {
+                    setSelectedOrder(order);
+                  }}
+                  className=" text-blue-500 cursor-pointer hover:underline"
+                  >Details</p>
                 </td>
               </tr>
             ))}
